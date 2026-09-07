@@ -15,42 +15,40 @@ import { BlogModal } from '../components/BlogModal';
 import { SpecialOffersModal } from '../components/SpecialOffersModal';
 import { ContactModal } from '../components/ContactModal';
 import { Toast } from '../components/Toast';
-import { LiquidNavCustomizer } from '../components/LiquidNavCustomizer';
-import { MobileLiquidDock } from '../components/MobileLiquidDock';
 
 export const Home: React.FC = () => {
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#FDFBFB] text-[#1E1E24] flex flex-col justify-between selection:bg-[#761A30] selection:text-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-[#FDFBFB] text-[#1E1E24] flex flex-col justify-between selection:bg-[#761A30] selection:text-white">
       {/* Top Navbar */}
       <Navbar onOpenContact={() => setContactOpen(true)} />
 
-      {/* Main Content Layout matching exact UI/UX */}
+      {/* Main Content Layout */}
       <main className="flex-1">
-        {/* 1. Hero Section with Arched Developer Visual & Floating Badges */}
+        {/* 1. Hero Section with Professional Developer Focus */}
         <Hero />
 
-        {/* 2. Core Technical Domains Grid (6 Categories matching mockup) */}
+        {/* 2. Core Technical Domains Grid */}
         <PopularCategory />
 
-        {/* 3. Featured Milestone Banner (Special Highlight for Mwakyoma Market & Smart Queue) */}
+        {/* 3. Featured Milestone Banner */}
         <SpecialOffers />
 
-        {/* 4. Featured Projects Catalog (8-Grid Project Cards) */}
+        {/* 4. Featured Projects Catalog */}
         <FeaturedItems />
 
-        {/* 5. Technical Stack, Experience & Certifications Matrix */}
+        {/* 5. Technical Stack, Experience & Credentials Matrix */}
         <TechnicalStack />
 
-        {/* 6. Our Tech Journal (3 Engineering Article Cards) */}
+        {/* 6. Technical Journal & Publications */}
         <BlogSection />
       </main>
 
-      {/* 7. Dark Burgundy Footer */}
+      {/* 7. Executive Burgundy Footer */}
       <Footer />
 
-      {/* Interactive Drawers & Modals */}
+      {/* Clean Interactive Drawers & Modals */}
       <CartDrawer />
       <ProductQuickViewModal />
       <SearchModal />
@@ -58,10 +56,6 @@ export const Home: React.FC = () => {
       <SpecialOffersModal />
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
       <Toast />
-
-      {/* Customized Liquid Navigation Components */}
-      <LiquidNavCustomizer />
-      <MobileLiquidDock />
     </div>
   );
 };

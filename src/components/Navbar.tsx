@@ -352,17 +352,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
 
           {/* Right Action Icons */}
           <div className="flex items-center space-x-2 sm:space-x-2.5">
-            {/* Customize Liquid Navigation Button */}
-            <button
-              onClick={() => setIsCustomizerOpen(true)}
-              className="p-2 sm:px-3 sm:py-1.5 rounded-full bg-[#FAF3F5] text-[#761A30] hover:bg-[#761A30] hover:text-white border border-[#F4ECEE] text-xs font-bold flex items-center space-x-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
-              title="Customize Liquid Navigation & Theme"
-            >
-              <Droplets className="w-3.5 h-3.5 animate-pulse" />
-              <span className="hidden lg:inline text-[11px]">Liquid Nav</span>
-              <Sliders className="w-3 h-3 opacity-70" />
-            </button>
-
             {/* Search Icon */}
             <button
               onClick={() => setIsSearchOpen(true)}
@@ -414,6 +403,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={`md:hidden p-2 rounded-xl hover:bg-black/5 cursor-pointer ${textColorClass}`}
+              aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -448,21 +438,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
               </button>
             ))}
 
-            {/* Quick Liquid Customize button on mobile menu */}
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setIsCustomizerOpen(true);
-              }}
-              className="w-full text-left px-4 py-2.5 rounded-2xl text-xs font-bold text-[#761A30] bg-[#FAF3F5] hover:bg-[#F4ECEE] transition-all flex items-center justify-between"
-            >
-              <span className="flex items-center space-x-2">
-                <Droplets className="w-4 h-4" />
-                <span>Customize Liquid Navigation</span>
-              </span>
-              <Sliders className="w-3.5 h-3.5" />
-            </button>
-
             <div className="pt-3 border-t border-[#F1EBEB] flex flex-col space-y-2">
               <button
                 onClick={() => {
@@ -470,14 +445,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                   if (onOpenContact) onOpenContact();
                   else setIsContactOpen(true);
                 }}
-                className="w-full py-2.5 rounded-full bg-[#761A30] text-white font-bold text-xs tracking-wider uppercase text-center shadow-md"
+                className="w-full py-2.5 rounded-full bg-[#761A30] text-white font-bold text-xs tracking-wider uppercase text-center shadow-md cursor-pointer"
               >
                 Contact Elieza
               </button>
               <Link
                 to="/admin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2 rounded-full bg-slate-900 text-white/80 hover:text-white font-mono text-[11px] tracking-wider uppercase text-center flex items-center justify-center space-x-2"
+                className="w-full py-2 rounded-full bg-slate-900 text-white/80 hover:text-white font-mono text-[11px] tracking-wider uppercase text-center flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <Shield className="w-3.5 h-3.5 text-amber-300" />
                 <span>Admin Portal</span>

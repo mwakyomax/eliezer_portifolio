@@ -132,19 +132,18 @@ export const FeaturedItems: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Card Information Body matching mockup */}
+                {/* Card Information Body */}
                 <div className="space-y-2 text-left">
-                  {/* Origin & Type */}
-                  <div className="flex items-center justify-between text-[10px] font-bold text-[#A1A1AA]">
-                    <span className="truncate">Tanzania • Full Stack</span>
-                    <span className="flex items-center text-[#F59E0B]">
-                      <Star className="w-3 h-3 fill-current mr-0.5" />
-                      <span>5.0</span>
+                  {/* Origin & Discipline */}
+                  <div className="flex items-center justify-between text-[11px] font-bold text-[#71717A]">
+                    <span className="truncate">{project.category}</span>
+                    <span className="inline-flex items-center text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                      Active
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-sm font-black text-[#18181B] group-hover:text-[#761A30] transition-colors line-clamp-1">
+                  <h3 className="text-sm sm:text-base font-black text-[#18181B] group-hover:text-[#761A30] transition-colors line-clamp-1">
                     {project.title}
                   </h3>
 
@@ -165,13 +164,11 @@ export const FeaturedItems: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Footer Row: Status & Quick Action Button matching price in mockup */}
+                  {/* Footer Row: Code & Live Link Actions */}
                   <div className="flex items-center justify-between pt-3 border-t border-[#E4E4E7] mt-2">
-                    <div className="flex items-baseline space-x-1.5">
-                      <span className="text-xs font-black text-[#761A30]">
-                        Open Source
-                      </span>
-                    </div>
+                    <span className="text-[11px] font-extrabold text-[#761A30] tracking-wide uppercase">
+                      Case Study
+                    </span>
 
                     <div className="flex items-center space-x-1.5">
                       {project.liveUrl && (
@@ -180,8 +177,8 @@ export const FeaturedItems: React.FC = () => {
                           target="_blank"
                           rel="noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1.5 rounded-lg bg-white text-[#52525B] hover:text-[#761A30] hover:bg-[#FAF3F5] border border-[#E4E4E7] transition-colors"
-                          title="Live Demo"
+                          className="p-1.5 rounded-lg bg-white text-[#52525B] hover:text-[#761A30] hover:bg-[#FAF3F5] border border-[#E4E4E7] transition-colors cursor-pointer"
+                          title="Open Live Deployment"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
@@ -191,8 +188,8 @@ export const FeaturedItems: React.FC = () => {
                         target="_blank"
                         rel="noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="p-1.5 rounded-lg bg-white text-[#52525B] hover:text-[#761A30] hover:bg-[#FAF3F5] border border-[#E4E4E7] transition-colors"
-                        title="GitHub Repository"
+                        className="p-1.5 rounded-lg bg-white text-[#52525B] hover:text-[#761A30] hover:bg-[#FAF3F5] border border-[#E4E4E7] transition-colors cursor-pointer"
+                        title="View Source on GitHub"
                       >
                         <Github className="w-3.5 h-3.5" />
                       </a>

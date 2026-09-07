@@ -30,21 +30,21 @@ export const Hero: React.FC = () => {
               <span>Software Developer & Network Specialist</span>
             </div>
 
-            {/* Main Headline matching "Collection and style for everyone 🟡" */}
+            {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#18181B] tracking-tight leading-[1.12]">
-              Building digital solutions and scalable software for everyone <span className="inline-block text-[#F59E0B] select-none text-3xl sm:text-5xl">🟡</span>
+              Engineering Scalable Systems, Full-Stack Software & Networks
             </h1>
 
             {/* Descriptive Body */}
             <p className="text-base sm:text-lg text-[#52525B] leading-relaxed max-w-2xl font-normal">
-              Hi, I'm <strong className="text-[#18181B] font-bold">Elieza Mwakyoma</strong>, a software developer and networker with a Bachelor of Science in Computer Science from St. Joseph University in Tanzania. I engineer resilient full-stack web applications, robust network configurations, and offline-first mobile systems that turn complex challenges into high-performance digital products.
+              Hi, I'm <strong className="text-[#18181B] font-bold">Elieza Mwakyoma</strong>, a software developer and network specialist with a Bachelor of Science in Computer Science from St. Joseph University in Tanzania. I build resilient full-stack web platforms, high-throughput network architectures, and offline-first Android applications tailored for real-world reliability.
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={scrollToProjects}
-                className="inline-flex items-center space-x-2 px-8 py-4 rounded-full bg-[#761A30] hover:bg-[#5E1426] text-white font-bold text-sm tracking-wider uppercase transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                className="inline-flex items-center space-x-2 px-8 py-4 rounded-full bg-[#761A30] hover:bg-[#5E1426] text-white font-bold text-sm tracking-wider uppercase transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
               >
                 <span>Explore Projects</span>
                 <ArrowRight className="w-4 h-4" />
@@ -52,39 +52,39 @@ export const Hero: React.FC = () => {
 
               <button
                 onClick={() => setIsSpecialHighlightOpen(true)}
-                className="inline-flex items-center space-x-2 px-7 py-4 rounded-full bg-white hover:bg-[#FAF8F8] text-[#18181B] font-bold text-sm border border-[#E4E4E7] transition-all shadow-xs hover:border-[#761A30] hover:text-[#761A30]"
+                className="inline-flex items-center space-x-2 px-7 py-4 rounded-full bg-white hover:bg-[#FAF8F8] text-[#18181B] font-bold text-sm border border-[#E4E4E7] transition-all shadow-xs hover:border-[#761A30] hover:text-[#761A30] cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#761A30]" />
                 <span>Featured Milestone</span>
               </button>
             </div>
 
-            {/* Social Proof / Stats Box matching the avatar + 4.9 rating in the mockup */}
-            <div className="pt-6 border-t border-[#F1EBEB] flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="flex items-center -space-x-2 overflow-hidden">
-                <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-[#761A30] text-white flex items-center justify-center text-xs font-bold font-mono">
-                  JS
-                </div>
-                <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-[#0284C7] text-white flex items-center justify-center text-xs font-bold font-mono">
-                  TS
-                </div>
-                <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-[#10B981] text-white flex items-center justify-center text-xs font-bold font-mono">
-                  PY
-                </div>
-                <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-[#8B5CF6] text-white flex items-center justify-center text-xs font-bold font-mono">
-                  DB
-                </div>
+            {/* Credibility & Production Highlights */}
+            <div className="pt-6 border-t border-[#F1EBEB] grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="space-y-0.5">
+                <span className="text-xl sm:text-2xl font-black text-[#18181B] font-mono">
+                  12+
+                </span>
+                <p className="text-xs font-semibold text-[#71717A]">
+                  Shipped Systems
+                </p>
               </div>
 
               <div className="space-y-0.5">
-                <div className="flex items-center space-x-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
-                  ))}
-                  <span className="text-xs font-bold text-[#18181B] ml-1">4.9 / 5.0 Rating</span>
-                </div>
-                <p className="text-xs text-[#71717A]">
-                  12+ production projects built • 18+ tech stacks mastered • Open for full-time & freelance
+                <span className="text-xl sm:text-2xl font-black text-[#761A30] font-mono">
+                  B.Sc.
+                </span>
+                <p className="text-xs font-semibold text-[#71717A]">
+                  Computer Science
+                </p>
+              </div>
+
+              <div className="col-span-2 sm:col-span-1 space-y-0.5">
+                <span className="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full inline-block">
+                  Available Now
+                </span>
+                <p className="text-xs font-semibold text-[#71717A]">
+                  Full-time & Contracts
                 </p>
               </div>
             </div>
