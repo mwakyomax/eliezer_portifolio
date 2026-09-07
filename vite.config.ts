@@ -18,14 +18,14 @@ export default defineConfig(() => {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-                return 'vendor-react';
-              }
-              if (id.includes('motion')) {
-                return 'vendor-motion';
-              }
-              if (id.includes('lucide-react')) {
-                return 'vendor-icons';
+              if (
+                id.includes('/react/') ||
+                id.includes('/react-dom/') ||
+                id.includes('/react-router/') ||
+                id.includes('/react-router-dom/') ||
+                id.includes('/motion/')
+              ) {
+                return 'vendor-framework';
               }
             }
           },
