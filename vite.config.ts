@@ -11,26 +11,10 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    base: '/',
     build: {
       target: 'esnext',
-      chunkSizeWarningLimit: 1200,
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (
-                id.includes('/react/') ||
-                id.includes('/react-dom/') ||
-                id.includes('/react-router/') ||
-                id.includes('/react-router-dom/') ||
-                id.includes('/motion/')
-              ) {
-                return 'vendor-framework';
-              }
-            }
-          },
-        },
-      },
+      chunkSizeWarningLimit: 1500,
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
