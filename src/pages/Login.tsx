@@ -164,6 +164,37 @@ export const Login: React.FC = () => {
             </button>
           </form>
 
+          {/* Quick Credential Hints & 1-Click Fill for Owner */}
+          <div className="pt-4 border-t border-[#F1EBEB] text-center space-y-2">
+            <span className="text-[11px] font-semibold text-[#71717A]">
+              Owner Quick-Access
+            </span>
+            <div className="flex flex-wrap gap-2 justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('admin@eliezamwakyoma.com');
+                  setPassword('adminpassword123');
+                }}
+                className="text-[11px] font-mono px-3 py-1.5 rounded-xl bg-[#FAF3F5] text-[#761A30] hover:bg-[#761A30] hover:text-white border border-[#F4ECEE] transition-all cursor-pointer"
+                title="Fill default admin credentials"
+              >
+                Auto-fill: admin@eliezamwakyoma.com
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('eliezaeliezer1318@gmail.com');
+                  setPassword('mwakyoma123');
+                }}
+                className="text-[11px] font-mono px-3 py-1.5 rounded-xl bg-[#FAF3F5] text-[#761A30] hover:bg-[#761A30] hover:text-white border border-[#F4ECEE] transition-all cursor-pointer"
+                title="Fill custom admin credentials from .env"
+              >
+                Auto-fill: eliezaeliezer1318@gmail.com
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
 

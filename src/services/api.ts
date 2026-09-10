@@ -10,11 +10,13 @@ import {
   PortfolioSettings 
 } from '../types';
 
-const rawBaseUrl = import.meta.env.VITE_API_URL;
-const API_BASE = rawBaseUrl ? `${rawBaseUrl.replace(/\/$/, '')}/api` : '/api';
+// Live Render backend URL:
+const API_URL = 'https://eliezer-portifolio.onrender.com/api';
 
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: import.meta.env.VITE_API_URL 
+    ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api` 
+    : API_URL,
   headers: {
     'Content-Type': 'application/json',
   },

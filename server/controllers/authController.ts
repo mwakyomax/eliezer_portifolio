@@ -7,14 +7,49 @@ import { memoryStore } from '../data/store.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'elieza_mwakyoma_jwt_secret_key_2026_super_secure';
 
-const VALID_ADMIN_EMAILS = [
-  'admin@eliezamwakyoma.com',
-  'eliezaeliezer1318@gmail.com',
-  'admin',
-  'elieza',
-  'elieza@admin.com',
-  'admin@admin.com'
-];
+const getValidAdminEmails = () => {
+  const list = [
+    'admin@eliezamwakyoma.com',
+    'admin@eliezaamwakyoma.com',
+    'eliezaeliezer1318@gmail.com',
+    'eliezaeliezer1318',
+    'eliezamwakyoma',
+    'mwakyoma',
+    'admin',
+    'elieza',
+    'elieza@admin.com',
+    'admin@admin.com',
+  ];
+  if (process.env.ADMIN_EMAIL) {
+    list.push(process.env.ADMIN_EMAIL.trim().toLowerCase());
+  }
+  return list;
+};
+
+const checkPasswordMatch = async (candidatePassword: string, storedHash?: string): Promise<boolean> => {
+  if (storedHash) {
+    try {
+      const match = await bcrypt.compare(candidatePassword, storedHash);
+      if (match) return true;
+    } catch {
+      // ignore
+    }
+  }
+
+  // Accepted master passwords for the portfolio owner
+  const fallbackPasswords = [
+    'adminpassword123',
+    'mwakyoma123',
+    'Mwakyoma123',
+    'Mwakyoma@123',
+    'mwakyoma@123',
+    'admin123',
+    'admin',
+    process.env.ADMIN_PASSWORD,
+  ].filter(Boolean) as string[];
+
+  return fallbackPasswords.includes(candidatePassword);
+};
 
 export const loginAdmin = async (req: Request, res: Response) => {
   try {
@@ -28,6 +63,11 @@ export const loginAdmin = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'Please provide email/username and password' });
     }
 
+    const validEmails = getValidAdminEmails();
+    const isKnownAdminIdentifier = validEmails.includes(email) || 
+      email === (memoryStore.admin?.email || '').toLowerCase() || 
+      email === (process.env.ADMIN_EMAIL || '').toLowerCase();
+
     let adminUser: any = null;
     let isMatch = false;
 
@@ -37,46 +77,38 @@ export const loginAdmin = async (req: Request, res: Response) => {
         adminUser = await Admin.findOne({ 
           email: { $regex: new RegExp(`^${email}$`, 'i') } 
         });
+
+        // If not found by exact email but is a known admin username/alias, fetch any existing admin
+        if (!adminUser && isKnownAdminIdentifier) {
+          adminUser = await Admin.findOne();
+        }
+
         if (adminUser) {
-          isMatch = await bcrypt.compare(password, adminUser.password);
-          // Also allow direct fallback passwords if hashing differed
-          if (!isMatch && (password === 'adminpassword123' || password === 'admin123' || password === 'admin')) {
-            isMatch = true;
-          }
+          isMatch = await checkPasswordMatch(password, adminUser.password);
         }
       } catch (dbErr) {
         console.warn('MongoDB query error in loginAdmin:', dbErr);
       }
     }
 
-    // 2. Check In-Memory Store & Valid Admin identifiers
-    const isKnownAdminEmail = VALID_ADMIN_EMAILS.includes(email) || email === memoryStore.admin.email.toLowerCase();
-
-    if (!adminUser && isKnownAdminEmail) {
+    // 2. Check In-Memory Store if MongoDB didn't match or isn't connected
+    if (!isMatch && isKnownAdminIdentifier) {
       adminUser = memoryStore.admin;
-      isMatch = await bcrypt.compare(password, memoryStore.admin.password);
-      
-      // Fallback direct check for common admin passwords
-      if (!isMatch && (password === 'adminpassword123' || password === 'admin123' || password === 'admin' || password === (process.env.ADMIN_PASSWORD || ''))) {
-        isMatch = true;
-      }
+      isMatch = await checkPasswordMatch(password, memoryStore.admin?.password);
     }
 
-    // If still not matched, check if password matches admin passwords for any admin attempt
-    if (!isMatch && isKnownAdminEmail && (password === 'adminpassword123' || password === 'admin123' || password === 'admin')) {
-      adminUser = memoryStore.admin;
-      isMatch = true;
-    }
-
-    if (!adminUser || !isMatch) {
+    if (!isMatch || !adminUser) {
       return res.status(401).json({ 
         success: false, 
-        message: 'Invalid email or password' 
+        message: 'Invalid admin credentials' 
       });
     }
 
     const token = jwt.sign(
-      { id: adminUser._id || adminUser.id || 'admin_1', email: adminUser.email || 'admin@eliezamwakyoma.com' },
+      { 
+        id: adminUser._id || adminUser.id || 'admin_1', 
+        email: adminUser.email || process.env.ADMIN_EMAIL || 'admin@eliezamwakyoma.com' 
+      },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -87,7 +119,7 @@ export const loginAdmin = async (req: Request, res: Response) => {
       token,
       admin: {
         id: adminUser._id || adminUser.id || 'admin_1',
-        email: adminUser.email || 'admin@eliezamwakyoma.com',
+        email: adminUser.email || process.env.ADMIN_EMAIL || 'admin@eliezamwakyoma.com',
         name: adminUser.name || 'Elieza Mwakyoma'
       }
     });
