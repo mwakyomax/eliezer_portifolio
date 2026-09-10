@@ -75,7 +75,15 @@ interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState(PORTFOLIO_SETTINGS);
+  const [settings, setSettings] = useState(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_settings');
+      if (cached) {
+        return { ...PORTFOLIO_SETTINGS, ...JSON.parse(cached) };
+      }
+    } catch (e) {}
+    return PORTFOLIO_SETTINGS;
+  });
   const [projects, setProjects] = useState<Project[]>(PROJECTS_DATA);
   const [categories, setCategories] = useState<PortfolioCategory[]>(DOMAIN_CATEGORIES);
   const [articles, setArticles] = useState<BlogArticle[]>(BLOG_ARTICLES);
@@ -107,7 +115,13 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (art?.data?.data && art.data.data.length > 0) setArticles(art.data.data);
       if (cat?.data?.data && cat.data.data.length > 0) setCategories(cat.data.data);
       if (st?.data?.data) {
-        setSettings((prev) => ({ ...prev, ...st.data.data }));
+        setSettings((prev) => {
+          const merged = { ...prev, ...st.data.data };
+          try {
+            localStorage.setItem('elieza_portfolio_settings', JSON.stringify(merged));
+          } catch (e) {}
+          return merged;
+        });
       }
     } catch (err) {
       console.error('Error fetching live portfolio data', err);
@@ -119,7 +133,13 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   const updateSettingsState = (newSettings: Partial<typeof PORTFOLIO_SETTINGS>) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
+    setSettings((prev) => {
+      const merged = { ...prev, ...newSettings };
+      try {
+        localStorage.setItem('elieza_portfolio_settings', JSON.stringify(merged));
+      } catch (e) {}
+      return merged;
+    });
   };
 
   const reloadPortfolioData = async () => {

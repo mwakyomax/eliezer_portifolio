@@ -86,9 +86,6 @@ export const Login: React.FC = () => {
               <h1 className="text-2xl font-black text-[#18181B] tracking-tight">
                 Elieza Mwakyoma
               </h1>
-              <p className="text-xs text-[#71717A] mt-1">
-                Enter your administrator credentials to manage projects, skills, and portfolio settings.
-              </p>
             </div>
           </div>
 

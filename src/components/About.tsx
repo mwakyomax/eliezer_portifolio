@@ -9,7 +9,22 @@ interface AboutProps {
 }
 
 export const About: React.FC<AboutProps> = ({ settings }) => {
-  const profileImage = settings?.profileImage || defaultProfilePic;
+  const [imgError, setImgError] = React.useState(false);
+
+  React.useEffect(() => {
+    setImgError(false);
+  }, [settings?.profileImage]);
+
+  const profileImage = React.useMemo(() => {
+    if (imgError) return defaultProfilePic;
+    const img = settings?.profileImage;
+    if (!img) return defaultProfilePic;
+    if (img.startsWith('/src/assets/images/') || img.includes('elieza_official_portrait')) {
+      return defaultProfilePic;
+    }
+    return img;
+  }, [settings?.profileImage, imgError]);
+
   const stats = settings?.statistics || {
     projectsCompleted: 12,
     technologiesMastered: 18,
@@ -61,6 +76,7 @@ export const About: React.FC<AboutProps> = ({ settings }) => {
                 src={profileImage}
                 alt="Elieza Mwakyoma Profile"
                 referrerPolicy="no-referrer"
+                onError={() => setImgError(true)}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />

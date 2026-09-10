@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowRight, Star, Sparkles, Download, CheckCircle2, Terminal, Code, Cpu, ShieldCheck } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { motion } from 'motion/react';
+import defaultHeroPortrait from '../assets/images/elieza_official_portrait_1788279969619.jpg';
 
 export const Hero: React.FC = () => {
   const { settings, setIsSpecialHighlightOpen } = usePortfolio();
+  const [imgError, setImgError] = useState(false);
+
+  // Reset img error if admin updates profile picture
+  useEffect(() => {
+    setImgError(false);
+  }, [settings?.profileImage]);
+
+  // Safely resolve the display image
+  const displayImage = useMemo(() => {
+    if (imgError) return defaultHeroPortrait;
+    const img = settings?.profileImage;
+    if (!img) return defaultHeroPortrait;
+    // Normalize broken or raw dev paths
+    if (img.startsWith('/src/assets/images/') || img.includes('elieza_official_portrait')) {
+      return defaultHeroPortrait;
+    }
+    return img;
+  }, [settings?.profileImage, imgError]);
 
   const scrollToProjects = () => {
     const target = document.getElementById('featured-projects');
@@ -106,11 +125,12 @@ export const Hero: React.FC = () => {
 
               {/* Developer Portrait Image */}
               <img
-                src={settings.profileImage}
+                src={displayImage}
                 alt="Elieza Mwakyoma - Software Developer & Networker"
                 referrerPolicy="no-referrer"
                 fetchPriority="high"
                 decoding="async"
+                onError={() => setImgError(true)}
                 className="w-full h-full object-cover rounded-t-[130px] sm:rounded-t-[170px] rounded-b-[38px] group-hover:scale-105 transition-transform duration-700"
               />
             </motion.div>

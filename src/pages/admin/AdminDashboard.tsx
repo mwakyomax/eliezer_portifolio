@@ -14,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { useLiquidNav } from '../../context/LiquidNavContext';
 import { processGalleryImage } from '../../utils/imageUtils';
+import defaultHeroPortrait from '../../assets/images/elieza_official_portrait_1788279969619.jpg';
 import { 
   DEFAULT_PROFILE_IMAGE,
   PROJECTS_DATA,
@@ -554,20 +555,36 @@ export const AdminDashboard: React.FC = () => {
     if (!file) return;
     try {
       setIsProcessingImage(true);
-      const result = await processGalleryImage(file, 1200, 0.88);
-      if (settings) {
-        setSettings({
-          ...settings,
-          profileImage: result.dataUrl
-        });
-      }
+      const result = await processGalleryImage(file, 1000, 0.85);
+      
+      const newSettings = {
+        ...settings,
+        profileImage: result.dataUrl
+      };
+
+      setSettings(newSettings);
+      updateSettingsState(newSettings);
+
       setImageMeta({
         name: file.name,
         sizeKb: result.sizeKb,
         width: result.width,
         height: result.height
       });
-      notify(`Photo "${file.name}" loaded from gallery (${result.sizeKb} KB)! Click "Save Profile Settings" to apply.`);
+
+      // Auto-publish to backend immediately
+      try {
+        const { _id, id, __v, createdAt, updatedAt, ...cleanUpdate } = newSettings;
+        const res = await updateSettings(cleanUpdate);
+        if (res.data.success) {
+          updateSettingsState(res.data.data);
+          notify(`Profile picture "${file.name}" uploaded and published to public view!`);
+        } else {
+          notify(`Photo loaded! Click "Save Profile Settings" to finalize.`);
+        }
+      } catch (saveErr) {
+        notify(`Photo loaded (${result.sizeKb} KB)! Click "Save Profile Settings" to apply.`);
+      }
     } catch (err: any) {
       notify(err.message || 'Failed to process selected image', 'error');
     } finally {
@@ -575,13 +592,19 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleResetProfileImage = () => {
+  const handleResetProfileImage = async () => {
     if (settings) {
-      setSettings({
+      const newSettings = {
         ...settings,
         profileImage: DEFAULT_PROFILE_IMAGE
-      });
+      };
+      setSettings(newSettings);
+      updateSettingsState(newSettings);
       setImageMeta(null);
+      try {
+        const { _id, id, __v, createdAt, updatedAt, ...cleanUpdate } = newSettings;
+        await updateSettings(cleanUpdate);
+      } catch (e) {}
       notify('Reset to default official portrait.');
     }
   };
@@ -590,7 +613,7 @@ export const AdminDashboard: React.FC = () => {
     if (!file || !editingItem) return;
     try {
       setIsProcessingImage(true);
-      const result = await processGalleryImage(file, 1200, 0.88);
+      const result = await processGalleryImage(file, 1000, 0.85);
       setEditingItem({
         ...editingItem,
         image: result.dataUrl
@@ -623,13 +646,16 @@ export const AdminDashboard: React.FC = () => {
   const handleSaveSettings = async () => {
     if (!settings) return;
     try {
-      const res = await updateSettings(settings);
+      const { _id, id, __v, createdAt, updatedAt, ...cleanUpdate } = settings;
+      const res = await updateSettings(cleanUpdate);
       if (res.data.success) {
         updateSettingsState(res.data.data);
         notify('Portfolio profile and picture saved successfully!');
+      } else {
+        notify(res.data.message || 'Failed to save settings', 'error');
       }
     } catch (err: any) {
-      notify('Failed to save settings', 'error');
+      notify(err.response?.data?.message || err.message || 'Failed to save settings', 'error');
     }
   };
 
@@ -1691,9 +1717,12 @@ export const AdminDashboard: React.FC = () => {
                   <div className="relative w-48 sm:w-56 aspect-[3/4] rounded-t-[100px] sm:rounded-t-[120px] rounded-b-[28px] overflow-hidden p-1.5 bg-gradient-to-b from-[#761A30] via-[#5E1426] to-[#2B0811] shadow-xl ring-4 ring-[#761A30]/10">
                     <div className="w-full h-full rounded-t-[94px] sm:rounded-t-[114px] rounded-b-[22px] overflow-hidden bg-[#1E0911] relative">
                       <img
-                        src={settings.profileImage || DEFAULT_PROFILE_IMAGE}
+                        src={settings.profileImage && !settings.profileImage.startsWith('/src/assets/images/') ? settings.profileImage : defaultHeroPortrait}
                         alt={settings.fullName || 'Elieza Mwakyoma'}
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = defaultHeroPortrait;
+                        }}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -1709,8 +1738,11 @@ export const AdminDashboard: React.FC = () => {
                   {/* Circle Avatar Mini Preview */}
                   <div className="mt-4 flex items-center space-x-3 bg-white px-4 py-2 rounded-2xl border border-[#E4E4E7] shadow-xs">
                     <img
-                      src={settings.profileImage || DEFAULT_PROFILE_IMAGE}
+                      src={settings.profileImage && !settings.profileImage.startsWith('/src/assets/images/') ? settings.profileImage : defaultHeroPortrait}
                       alt="Avatar"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = defaultHeroPortrait;
+                      }}
                       className="w-10 h-10 rounded-full object-cover border-2 border-[#761A30]"
                     />
                     <div className="text-left">

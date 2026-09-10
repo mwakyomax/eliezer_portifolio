@@ -29,20 +29,27 @@ export const getSettings = async (req: Request, res: Response) => {
 
 export const updateSettings = async (req: Request, res: Response) => {
   try {
+    const updateData = { ...req.body };
+    delete updateData._id;
+    delete updateData.id;
+    delete updateData.__v;
+    delete updateData.createdAt;
+    delete updateData.updatedAt;
+
     if (mongoose.connection.readyState === 1) {
       let settings = await PortfolioSettings.findOne();
       if (settings) {
-        Object.assign(settings, req.body, { updatedAt: new Date() });
+        Object.assign(settings, updateData, { updatedAt: new Date() });
         await settings.save();
       } else {
-        settings = await PortfolioSettings.create({ ...req.body, updatedAt: new Date() });
+        settings = await PortfolioSettings.create({ ...updateData, updatedAt: new Date() });
       }
       return res.json({ success: true, data: settings, message: 'Settings updated successfully' });
     }
 
     memoryStore.settings = {
       ...memoryStore.settings,
-      ...req.body,
+      ...updateData,
       updatedAt: new Date()
     };
     return res.json({ success: true, data: memoryStore.settings, message: 'Settings updated successfully' });
