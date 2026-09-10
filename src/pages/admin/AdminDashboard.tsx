@@ -14,7 +14,16 @@ import { useAuth } from '../../context/AuthContext';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { useLiquidNav } from '../../context/LiquidNavContext';
 import { processGalleryImage } from '../../utils/imageUtils';
-import { DEFAULT_PROFILE_IMAGE } from '../../data/portfolioData';
+import { 
+  DEFAULT_PROFILE_IMAGE,
+  PROJECTS_DATA,
+  SKILLS_DATA,
+  EXPERIENCE_DATA,
+  EDUCATION_DATA,
+  CERTIFICATIONS_DATA,
+  SERVICES_DATA,
+  PORTFOLIO_SETTINGS
+} from '../../data/portfolioData';
 import { 
   fetchProjects, createProject, updateProject, deleteProject,
   fetchSkills, createSkill, updateSkill, deleteSkill,
@@ -23,7 +32,7 @@ import {
   fetchCertifications, createCertification, updateCertification, deleteCertification,
   fetchServices, createService, updateService, deleteService,
   fetchMessages, toggleMessageRead, deleteMessage,
-  fetchSettings, updateSettings
+  fetchSettings, updateSettings, seedDatabase
 } from '../../services/api';
 import { Project, Skill, Experience, Education, Certification, Service, Message, PortfolioSettings } from '../../types';
 
@@ -69,6 +78,8 @@ export const AdminDashboard: React.FC = () => {
   const [tempDescInput, setTempDescInput] = useState<string>('');
   const [tempFeatureInput, setTempFeatureInput] = useState<string>('');
 
+  const [isSeeding, setIsSeeding] = useState<boolean>(false);
+
   useEffect(() => {
     loadAllData();
   }, []);
@@ -87,18 +98,55 @@ export const AdminDashboard: React.FC = () => {
         fetchSettings().catch(() => null),
       ]);
 
-      if (pRes?.data?.data) setProjects(pRes.data.data);
-      if (sRes?.data?.data) setSkills(sRes.data.data);
-      if (eRes?.data?.data) setExperience(eRes.data.data);
-      if (edRes?.data?.data) setEducation(edRes.data.data);
-      if (cRes?.data?.data) setCertifications(cRes.data.data);
-      if (servRes?.data?.data) setServices(servRes.data.data);
-      if (mRes?.data?.data) setMessages(mRes.data.data);
-      if (setRes?.data?.data) setSettings(setRes.data.data);
+      const loadedProjects = pRes?.data?.data && pRes.data.data.length > 0 ? pRes.data.data : PROJECTS_DATA;
+      const loadedSkills = sRes?.data?.data && sRes.data.data.length > 0 ? sRes.data.data : SKILLS_DATA;
+      const loadedExp = eRes?.data?.data && eRes.data.data.length > 0 ? eRes.data.data : EXPERIENCE_DATA;
+      const loadedEdu = edRes?.data?.data && edRes.data.data.length > 0 ? edRes.data.data : EDUCATION_DATA;
+      const loadedCerts = cRes?.data?.data && cRes.data.data.length > 0 ? cRes.data.data : CERTIFICATIONS_DATA;
+      
+      setProjects(loadedProjects);
+      setSkills(loadedSkills);
+      setExperience(loadedExp);
+      setEducation(loadedEdu);
+      setCertifications(loadedCerts);
+
+      const loadedServices = servRes?.data?.data && servRes.data.data.length > 0 ? servRes.data.data : SERVICES_DATA;
+      setServices(loadedServices);
+
+      if (mRes?.data?.data) {
+        setMessages(mRes.data.data);
+      }
+      if (setRes?.data?.data) {
+        setSettings(setRes.data.data);
+      } else {
+        setSettings(PORTFOLIO_SETTINGS as any);
+      }
     } catch (err) {
       console.error('Error loading admin datasets:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSeedDatabase = async () => {
+    try {
+      setIsSeeding(true);
+      notify('Populating database with full portfolio dataset...');
+      const res = await seedDatabase();
+      if (res.data.success) {
+        const counts = res.data.counts;
+        const countInfo = counts
+          ? ` (${counts.projects} projects, ${counts.skills} skills, ${counts.experience} experiences, ${counts.articles || 3} articles, ${counts.categories || 6} categories)`
+          : '';
+        notify(`Database successfully synced & populated!${countInfo}`);
+        await loadAllData();
+      } else {
+        notify(res.data.message || 'Failed to sync database', 'error');
+      }
+    } catch (err: any) {
+      notify(err.response?.data?.message || err.message || 'Error seeding database', 'error');
+    } finally {
+      setIsSeeding(false);
     }
   };
 
@@ -631,6 +679,17 @@ export const AdminDashboard: React.FC = () => {
 
             {/* Quick Actions & User Bar */}
             <div className="flex items-center space-x-3 sm:space-x-4">
+              {/* Seed / Sync Database Action */}
+              <button
+                onClick={handleSeedDatabase}
+                disabled={isSeeding}
+                className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200 transition-all cursor-pointer shadow-2xs disabled:opacity-50"
+                title="Sync and populate MongoDB database with all default projects, skills, experience, and profile details"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 text-emerald-700 ${isSeeding ? 'animate-spin' : ''}`} />
+                <span className="hidden sm:inline">{isSeeding ? 'Syncing...' : 'Sync Database'}</span>
+              </button>
+
               <Link
                 to="/"
                 className="hidden sm:inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white hover:bg-[#FAF3F5] text-[#52525B] hover:text-[#761A30] text-xs font-bold border border-[#E4E4E7] hover:border-[#761A30]/30 transition-all shadow-xs"
@@ -781,6 +840,15 @@ export const AdminDashboard: React.FC = () => {
                   >
                     <Mail className="w-4 h-4" />
                     <span>View Inquiries ({unreadMessagesCount} unread)</span>
+                  </button>
+
+                  <button
+                    onClick={handleSeedDatabase}
+                    disabled={isSeeding}
+                    className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-100 font-bold text-xs uppercase tracking-wider transition-all border border-emerald-400/30 cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isSeeding ? 'animate-spin' : ''}`} />
+                    <span>{isSeeding ? 'Populating...' : 'Sync Database Records'}</span>
                   </button>
                 </div>
               </div>

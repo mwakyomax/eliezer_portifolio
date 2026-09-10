@@ -13,6 +13,8 @@ export interface InMemoryStore {
   education: any[];
   certifications: any[];
   services: any[];
+  categories: any[];
+  articles: any[];
   messages: any[];
   settings: any;
 }
@@ -31,9 +33,22 @@ export const memoryStore: InMemoryStore = {
     _id: 'settings_1',
     fullName: 'Elieza Mwakyoma',
     title: 'Software Developer & Networker | B.Sc. in Computer Science',
-    bio: 'I hold a Bachelor of Science in Computer Science and work as a software developer and network specialist. I specialize in building full-stack web applications, network architectures, databases, and cybersecurity tools that solve real-world problems.',
+    tagline: 'Building digital solutions and scalable software for everyone 🟡',
+    bio: "I hold a Bachelor of Science in Computer Science and work as a software developer and network specialist based in Dar es Salaam, Tanzania. I specialize in building responsive full-stack web applications, native Android tools, network infrastructure configurations, and resilient software systems that solve real-world problems.",
+    aboutMe: "I hold a Bachelor of Science in Computer Science and work as a software developer and network specialist based in Dar es Salaam, Tanzania. I specialize in building responsive full-stack web applications, native Android tools, network infrastructure configurations, and resilient software systems that solve real-world problems.",
     profileImage: DEFAULT_PROFILE_IMAGE,
     cvUrl: '/cv/Elieza_Mwakyoma_CV.pdf',
+    location: 'Dar es Salaam, Tanzania',
+    email: 'eliezaeliezer1318@gmail.com',
+    phone: '+255 629 899 017',
+    stats: {
+      projectsCompleted: 12,
+      technologiesMastered: 18,
+      yearsExperience: 3,
+      certificationsCount: 5,
+      rating: 4.9,
+      satisfiedUsers: '2.5k+'
+    },
     statistics: {
       projectsCompleted: 12,
       technologiesMastered: 18,
@@ -52,182 +67,323 @@ export const memoryStore: InMemoryStore = {
     },
     updatedAt: new Date()
   },
+  categories: [
+    {
+      _id: 'cat-1',
+      id: 'cat-1',
+      name: 'Full-Stack Web',
+      slug: 'Web Development',
+      itemCount: '6+ Projects',
+      iconName: 'Code',
+      description: 'Modern React, Node.js, Express & MongoDB web architectures'
+    },
+    {
+      _id: 'cat-2',
+      id: 'cat-2',
+      name: 'Mobile Apps',
+      slug: 'Mobile',
+      itemCount: '3+ Projects',
+      iconName: 'Smartphone',
+      description: 'Native Android applications with SQLite offline-first sync'
+    },
+    {
+      _id: 'cat-3',
+      id: 'cat-3',
+      name: 'Networking & Systems',
+      slug: 'Networking',
+      itemCount: '5+ Setups',
+      iconName: 'Server',
+      description: 'TCP/IP routing, Cisco Packet Tracer, subnetting & network security'
+    },
+    {
+      _id: 'cat-4',
+      id: 'cat-4',
+      name: 'Database Architecture',
+      slug: 'Database',
+      itemCount: '5+ Systems',
+      iconName: 'Database',
+      description: 'Normalized MySQL schemas, MongoDB indexing & data modeling'
+    },
+    {
+      _id: 'cat-5',
+      id: 'cat-5',
+      name: 'Cloud & DevOps',
+      slug: 'DevOps',
+      itemCount: '10+ Deploys',
+      iconName: 'Terminal',
+      description: 'Linux systems, Docker containers, CI/CD & REST API security'
+    },
+    {
+      _id: 'cat-6',
+      id: 'cat-6',
+      name: 'UI/UX & Frontend',
+      slug: 'UI/UX',
+      itemCount: '8+ Interfaces',
+      iconName: 'Layout',
+      description: 'Tailwind CSS, TypeScript, fluid micro-interactions & clean design'
+    }
+  ],
   projects: [
     {
       _id: 'proj_1',
+      id: 'proj_1',
       title: 'Mwakyoma Online Market',
-      description: 'An e-commerce platform designed to allow customers to browse products, add items to cart, and place orders online with real-time order tracking.',
+      description: 'A full-stack e-commerce web platform designed for merchants and consumers with real-time product filtering, secure JWT auth, shopping cart, and order tracking.',
       category: 'Web Development',
       technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'JWT'],
       image: DEFAULT_MARKET_IMAGE,
       githubUrl: 'https://github.com/mwakyomax/mwakyoma-online-market',
       liveUrl: 'https://market.eliezamwakyoma.dev',
       featured: true,
-      problemStatement: 'Local merchants in urban centers lack streamlined digital storefronts to manage product inventory and connect directly with online consumers.',
-      solution: 'Built a lightweight, responsive e-commerce web platform featuring dynamic search, multi-category navigation, localized currency display, and automated order confirmation.',
-      features: ['Dynamic product catalog with filtering', 'Secure user authentication & cart management', 'Admin inventory & stock tracking', 'Responsive checkout flow'],
+      problemStatement: 'Local merchants in urban retail hubs often struggle with fragmented physical inventories and lack an intuitive digital storefront to reach online consumers.',
+      solution: 'Engineered a high-performance web storefront with dynamic search, multi-category catalogs, localized price formatting, and automated order confirmation with inventory sync.',
+      features: [
+        'Dynamic product catalog with multi-facet filtering',
+        'Secure user authentication with JWT & role-based middleware',
+        'Persistent cart drawer with real-time price calculation',
+        'Merchant administrative dashboard for stock & order status'
+      ],
       screenshots: [DEFAULT_MARKET_IMAGE],
       createdAt: new Date('2025-11-15')
     },
     {
       _id: 'proj_2',
-      title: 'Smart Hospital Queueing Management System',
-      description: 'A system designed to improve hospital patient queue management, reducing waiting room overcrowding and prioritizing emergency cases.',
+      id: 'proj_2',
+      title: 'Smart Hospital Queueing System',
+      description: 'An automated hospital patient queue management system reducing waiting room congestion and efficiently prioritizing urgent clinical cases.',
       category: 'Algorithms',
       technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Python', 'WebSockets'],
       image: DEFAULT_HOSPITAL_IMAGE,
       githubUrl: 'https://github.com/mwakyomax/smart-hospital-queue',
       liveUrl: 'https://queue.eliezamwakyoma.dev',
       featured: true,
-      problemStatement: 'Unpredictable patient intake and manual queue management leads to severe hospital triage bottlenecks and long wait times.',
-      solution: 'Developed an automated queue triage system using priority algorithms and real-time waiting room status displays for patients and triage nurses.',
-      features: ['Real-time patient ticket generation', 'Triage priority queue algorithm', 'Doctor workstation caller interface', 'Analytics dashboard for hospital admins'],
+      problemStatement: 'Unpredictable patient arrivals and manual clipboard triage cause severe waiting room overcrowding, doctor burnout, and delayed emergency treatment.',
+      solution: 'Developed an automated digital triage system with structured priority scoring, real-time ticket monitors, and an intuitive doctor workstation interface.',
+      features: [
+        'Digital kiosk ticket generation with estimated wait times',
+        'Priority triage scoring algorithm for emergency cases',
+        'Live doctor calling interface with audio/visual status sync',
+        'Hospital analytics dashboard for queue throughput and peak hours'
+      ],
       screenshots: [DEFAULT_HOSPITAL_IMAGE],
       createdAt: new Date('2025-12-01')
     },
     {
       _id: 'proj_3',
-      title: 'MwakyomaX',
-      description: 'An Android application project focusing on utilities, task management, and offline-first mobile productivity tools for students.',
+      id: 'proj_3',
+      title: 'MwakyomaX Productivity Android App',
+      description: 'An offline-first Android productivity utility tailored for university students to track coursework, calculate GPA, and manage exam timetables.',
       category: 'Mobile',
-      technologies: ['Android Studio', 'Java', 'SQLite', 'REST APIs', 'XML Layouts'],
+      technologies: ['Android Studio', 'Java', 'SQLite', 'XML Layouts', 'Material Design'],
       image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
       githubUrl: 'https://github.com/mwakyomax/mwakyomax-android',
-      liveUrl: '',
+      liveUrl: 'https://github.com/mwakyomax/mwakyomax-android',
       featured: true,
-      problemStatement: 'Students need an integrated mobile utility tool to schedule study sessions, manage deadlines, and track academic assignments offline.',
-      solution: 'Created an Android app with SQLite local database caching, material design interfaces, and custom notification reminders.',
-      features: ['Offline-first SQLite local storage', 'Custom material notifications', 'Course schedule timetable planner', 'GPA calculator module'],
+      problemStatement: 'Students in areas with intermittent internet connectivity need reliable offline tools to organize complex course schedules and track academic milestones.',
+      solution: 'Built a lightweight native Android application backed by SQLite local persistence with customizable notification alarms and quick GPA calculation tools.',
+      features: [
+        '100% offline functionality using local SQLite database',
+        'Interactive semester timetable & assignment reminder alarms',
+        'Cumulative & semester GPA predictor calculator',
+        'Clean Material Design interface with Dark & Light theme options'
+      ],
       screenshots: [],
       createdAt: new Date('2025-08-10')
     },
     {
       _id: 'proj_4',
-      title: 'Skill Exchange System',
-      description: 'A peer-to-peer learning platform where users exchange knowledge and skills using a time-based credit balance system.',
+      id: 'proj_4',
+      title: 'Skill Exchange Community Platform',
+      description: 'A peer-to-peer knowledge sharing web app where users exchange skills (coding, design, languages) using a time-banking credit balance ledger.',
       category: 'Web Development',
       technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Socket.io', 'Tailwind CSS'],
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
       githubUrl: 'https://github.com/mwakyomax/skill-exchange-platform',
       liveUrl: 'https://skillexchange.eliezamwakyoma.dev',
-      featured: false,
-      problemStatement: 'Many learners lack funds for formal coding bootcamps but possess valuable reciprocal skills like language proficiency or graphic design.',
-      solution: 'Designed a time-banking platform where tutoring hours earn time credits that can be spent learning other disciplines from community peers.',
-      features: ['Peer skill matching algorithm', 'Time-bank credit wallet ledger', 'Integrated chat & video session links', 'User review & verification badges'],
+      featured: true,
+      problemStatement: 'Many motivated students cannot afford expensive commercial bootcamps despite possessing valuable skills that peers are eager to learn.',
+      solution: 'Designed a time-banking credit system where tutoring hours earn time tokens redeemable for lessons from other community members.',
+      features: [
+        'Smart peer matching algorithm based on interests & availability',
+        'Time-bank token ledger with transaction history',
+        'Integrated real-time chat with Socket.io messaging',
+        'User ratings, verification badges, and peer reviews'
+      ],
       screenshots: [],
       createdAt: new Date('2025-09-20')
     },
     {
       _id: 'proj_5',
-      title: 'Student Management System',
-      description: 'A comprehensive web application for managing student information, course enrollments, grade records, and academic reporting.',
+      id: 'proj_5',
+      title: 'Student Academic Management System',
+      description: 'An enterprise relational database web application for university faculties to manage student enrollments, course catalogs, and automated grade transcripts.',
       category: 'Database',
       technologies: ['Java', 'Spring Boot', 'MySQL', 'Thymeleaf', 'Bootstrap'],
       image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80',
       githubUrl: 'https://github.com/mwakyomax/student-management-system',
-      liveUrl: '',
+      liveUrl: 'https://github.com/mwakyomax/student-management-system',
       featured: false,
-      problemStatement: 'Educational institutions struggle with fragmented paper records and disparate spreadsheet files for student record keeping.',
-      solution: 'Engineered a centralized relational database system with role-based access control for faculty, students, and registrar staff.',
-      features: ['Role-based authorization (Admin, Teacher, Student)', 'Transcript generation & GPA calculation', 'Course enrollment management', 'Automated PDF grade sheet export'],
+      problemStatement: 'Educational departments often suffer from data redundancy and grading inconsistencies due to disparate spreadsheet files.',
+      solution: 'Constructed an ACID-compliant MySQL relational database with strict foreign key constraints and role-based access control for lecturers and students.',
+      features: [
+        'Role-based security (Registrar Admin, Lecturer, Student)',
+        'Automated semester GPA computation & PDF transcript generation',
+        'Course prerequisite validation and enrollment locks',
+        'Audit log tracking for grade modifications'
+      ],
       screenshots: [],
       createdAt: new Date('2025-05-14')
     },
     {
       _id: 'proj_6',
-      title: 'Hospital Management System',
-      description: 'A system for managing hospital operations and users such as administrators, doctors, nurses, and patients.',
+      id: 'proj_6',
+      title: 'Integrated Hospital Operations Portal',
+      description: 'A comprehensive healthcare management dashboard overseeing patient admission records, doctor appointment scheduling, and pharmacy inventories.',
       category: 'Web Development',
       technologies: ['Node.js', 'Express', 'MongoDB', 'React', 'Tailwind CSS'],
       image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80',
       githubUrl: 'https://github.com/mwakyomax/hospital-management-system',
-      liveUrl: '',
+      liveUrl: 'https://github.com/mwakyomax/hospital-management-system',
       featured: false,
-      problemStatement: 'Healthcare facilities need integrated patient record management, doctor appointment scheduling, and pharmacy stock monitoring.',
-      solution: 'Created an enterprise healthcare dashboard providing appointment scheduling, electronic medical records (EMR), and billing module.',
-      features: ['Electronic Health Record (EHR) entry', 'Doctor availability appointment booking', 'Pharmacy inventory tracking', 'Patient invoice generation'],
+      problemStatement: 'Small and medium clinics require affordable digital systems to manage patient records and avoid prescription stockouts.',
+      solution: 'Crafted a modular MERN stack portal handling electronic medical records (EMR), doctor appointment schedules, and pharmacy restock alerts.',
+      features: [
+        'Electronic Health Record (EHR) entry & diagnosis history',
+        'Doctor appointment calendar with slot booking',
+        'Pharmacy medication inventory with low-stock warnings',
+        'Printable patient billing invoices and receipt generation'
+      ],
       screenshots: [],
       createdAt: new Date('2025-03-22')
+    },
+    {
+      _id: 'proj_7',
+      id: 'proj_7',
+      title: 'Network Packet & Security Analyzer',
+      description: 'A Python network diagnostic tool analyzing TCP/IP packets, detecting port anomalies, and logging traffic statistics for security auditing.',
+      category: 'Networking',
+      technologies: ['Python', 'Scapy', 'Wireshark', 'Socket Programming', 'Tkinter'],
+      image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
+      githubUrl: 'https://github.com/mwakyomax/network-packet-analyzer',
+      liveUrl: 'https://github.com/mwakyomax/network-packet-analyzer',
+      featured: false,
+      problemStatement: 'System administrators need lightweight, scriptable tools to monitor unusual network packet bursts without heavy enterprise overhead.',
+      solution: 'Implemented a packet capture and header decoding utility in Python using Scapy with visual throughput graphs and suspicious port alerts.',
+      features: [
+        'Real-time packet sniffing across Ethernet & Wi-Fi interfaces',
+        'TCP/UDP header parsing and protocol breakdown',
+        'Port scan detection and IP geolocation lookup',
+        'Exportable CSV & PCAP security audit logs'
+      ],
+      screenshots: [],
+      createdAt: new Date('2025-06-18')
+    },
+    {
+      _id: 'proj_8',
+      id: 'proj_8',
+      title: 'Modern Developer Portfolio & Headless CMS',
+      description: 'An editorial developer portfolio featuring custom burgundy UI/UX design, real-time Express REST API, and interactive project dock.',
+      category: 'UI/UX',
+      technologies: ['React 18', 'TypeScript', 'Tailwind CSS', 'Motion', 'Express', 'Vite'],
+      image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
+      githubUrl: 'https://github.com/mwakyomax/elieza-developer-portfolio',
+      liveUrl: 'https://eliezamwakyoma.dev',
+      featured: true,
+      problemStatement: 'Developers need a portfolio that balances rigorous technical depth with an editorial, human-centric aesthetic that stands out.',
+      solution: 'Designed and built this high-contrast burgundy portfolio with modular architecture, custom SVG animations, live project search, and direct contact integration.',
+      features: [
+        'High-contrast editorial typography and bespoke color palette',
+        'Full-stack Express backend with project & message management',
+        'Interactive Project Dock to bookmark and export technical stacks',
+        'Fast client-side routing with motion transitions'
+      ],
+      screenshots: [],
+      createdAt: new Date('2026-02-01')
     }
   ],
   skills: [
     // Programming Languages
-    { _id: 'skill_1', name: 'Python', category: 'Programming Languages', icon: 'code', level: 90 },
-    { _id: 'skill_2', name: 'Java', category: 'Programming Languages', icon: 'code', level: 85 },
-    { _id: 'skill_3', name: 'JavaScript', category: 'Programming Languages', icon: 'code', level: 92 },
-    { _id: 'skill_4', name: 'TypeScript', category: 'Programming Languages', icon: 'code', level: 88 },
-    { _id: 'skill_5', name: 'C', category: 'Programming Languages', icon: 'code', level: 75 },
-    { _id: 'skill_6', name: 'C++', category: 'Programming Languages', icon: 'code', level: 80 },
-    { _id: 'skill_7', name: 'PHP', category: 'Programming Languages', icon: 'code', level: 70 },
-    { _id: 'skill_8', name: 'SQL', category: 'Programming Languages', icon: 'database', level: 90 },
-    { _id: 'skill_9', name: 'C#', category: 'Programming Languages', icon: 'code', level: 72 },
+    { _id: 'sk_1', name: 'Python', category: 'Languages', proficiency: 90, level: 90, icon: 'Code' },
+    { _id: 'sk_2', name: 'Java', category: 'Languages', proficiency: 85, level: 85, icon: 'Code' },
+    { _id: 'sk_3', name: 'JavaScript (ES6+)', category: 'Languages', proficiency: 92, level: 92, icon: 'Code' },
+    { _id: 'sk_4', name: 'TypeScript', category: 'Languages', proficiency: 88, level: 88, icon: 'Code' },
+    { _id: 'sk_php', name: 'PHP', category: 'Languages', proficiency: 85, level: 85, icon: 'Code' },
+    { _id: 'sk_5', name: 'C / C++', category: 'Languages', proficiency: 80, level: 80, icon: 'Code' },
+    { _id: 'sk_6', name: 'SQL', category: 'Languages', proficiency: 90, level: 90, icon: 'Database' },
 
     // Frontend
-    { _id: 'skill_10', name: 'HTML5 / CSS3', category: 'Frontend', icon: 'layout', level: 95 },
-    { _id: 'skill_11', name: 'React.js', category: 'Frontend', icon: 'atom', level: 90 },
-    { _id: 'skill_12', name: 'Tailwind CSS', category: 'Frontend', icon: 'feather', level: 92 },
-    { _id: 'skill_13', name: 'Bootstrap', category: 'Frontend', icon: 'layout', level: 85 },
+    { _id: 'sk_7', name: 'React.js', category: 'Frontend', proficiency: 92, level: 92, icon: 'Layout' },
+    { _id: 'sk_8', name: 'Tailwind CSS', category: 'Frontend', proficiency: 95, level: 95, icon: 'Layout' },
+    { _id: 'sk_9', name: 'HTML5 & Modern CSS', category: 'Frontend', proficiency: 95, level: 95, icon: 'Layout' },
+    { _id: 'sk_10', name: 'Motion / Animations', category: 'Frontend', proficiency: 85, level: 85, icon: 'Layout' },
 
-    // Backend
-    { _id: 'skill_14', name: 'Node.js', category: 'Backend', icon: 'server', level: 88 },
-    { _id: 'skill_15', name: 'Express.js', category: 'Backend', icon: 'server', level: 90 },
-    { _id: 'skill_16', name: 'Django', category: 'Backend', icon: 'layers', level: 80 },
-    { _id: 'skill_17', name: 'REST APIs', category: 'Backend', icon: 'globe', level: 92 },
+    // Backend & APIs
+    { _id: 'sk_11', name: 'Node.js', category: 'Backend', proficiency: 90, level: 90, icon: 'Server' },
+    { _id: 'sk_12', name: 'Express.js', category: 'Backend', proficiency: 92, level: 92, icon: 'Server' },
+    { _id: 'sk_django', name: 'Django', category: 'Backend', proficiency: 88, level: 88, icon: 'Server' },
+    { _id: 'sk_13', name: 'RESTful API Design', category: 'Backend', proficiency: 94, level: 94, icon: 'Server' },
 
     // Databases
-    { _id: 'skill_18', name: 'MongoDB', category: 'Databases', icon: 'database', level: 90 },
-    { _id: 'skill_19', name: 'MySQL', category: 'Databases', icon: 'database', level: 88 },
-    { _id: 'skill_20', name: 'PostgreSQL', category: 'Databases', icon: 'database', level: 82 },
-    { _id: 'skill_21', name: 'SQLite', category: 'Databases', icon: 'database', level: 85 },
+    { _id: 'sk_15', name: 'MongoDB & Mongoose', category: 'Databases', proficiency: 90, level: 90, icon: 'Database' },
+    { _id: 'sk_16', name: 'MySQL & Relational SQL', category: 'Databases', proficiency: 88, level: 88, icon: 'Database' },
+    { _id: 'sk_17', name: 'PostgreSQL', category: 'Databases', proficiency: 82, level: 82, icon: 'Database' },
+    { _id: 'sk_18', name: 'SQLite', category: 'Databases', proficiency: 86, level: 86, icon: 'Database' },
 
-    // Tools & Platforms
-    { _id: 'skill_22', name: 'Git & GitHub', category: 'Tools & Platforms', icon: 'git-branch', level: 92 },
-    { _id: 'skill_23', name: 'Linux / Bash', category: 'Tools & Platforms', icon: 'terminal', level: 85 },
-    { _id: 'skill_24', name: 'Android Studio', category: 'Tools & Platforms', icon: 'smartphone', level: 80 },
-    { _id: 'skill_25', name: 'Postman', category: 'Tools & Platforms', icon: 'send', level: 90 },
-    { _id: 'skill_26', name: 'Docker Containers', category: 'Tools & Platforms', icon: 'cpu', level: 78 },
-    { _id: 'skill_27', name: 'MongoDB Compass', category: 'Tools & Platforms', icon: 'database', level: 88 },
+    // Tools & DevOps
+    { _id: 'sk_19', name: 'Git & GitHub Workflow', category: 'DevOps & Tools', proficiency: 92, level: 92, icon: 'Terminal' },
+    { _id: 'sk_20', name: 'Linux / Bash Scripting', category: 'DevOps & Tools', proficiency: 86, level: 86, icon: 'Terminal' },
+    { _id: 'sk_21', name: 'Android Studio', category: 'DevOps & Tools', proficiency: 82, level: 82, icon: 'Smartphone' },
+    { _id: 'sk_22', name: 'Docker Containers', category: 'DevOps & Tools', proficiency: 78, level: 78, icon: 'Cpu' },
+    { _id: 'sk_23', name: 'Postman API Testing', category: 'DevOps & Tools', proficiency: 90, level: 90, icon: 'Terminal' },
 
     // Network & Systems
-    { _id: 'skill_28', name: 'Cisco Packet Tracer', category: 'Network & Systems', icon: 'network', level: 88 },
-    { _id: 'skill_29', name: 'TCP/IP & Routing Protocols', category: 'Network & Systems', icon: 'wifi', level: 86 },
-    { _id: 'skill_30', name: 'Network Configuration & Subnetting', category: 'Network & Systems', icon: 'network', level: 85 },
-    { _id: 'skill_31', name: 'System Administration & Security', category: 'Network & Systems', icon: 'shield', level: 82 },
-
-    // Other Areas
-    { _id: 'skill_32', name: 'Cybersecurity Fundamentals', category: 'Other Areas', icon: 'shield', level: 80 },
-    { _id: 'skill_33', name: 'Algorithms & Data Structures', category: 'Other Areas', icon: 'cpu', level: 88 },
-    { _id: 'skill_34', name: 'API Development & Integration', category: 'Other Areas', icon: 'cpu', level: 90 }
+    { _id: 'sk_24', name: 'Cisco Packet Tracer', category: 'Network & Systems', proficiency: 88, level: 88, icon: 'Network' },
+    { _id: 'sk_25', name: 'TCP/IP & Routing Protocols', category: 'Network & Systems', proficiency: 86, level: 86, icon: 'Wifi' },
+    { _id: 'sk_26', name: 'Network Configuration & Subnetting', category: 'Network & Systems', proficiency: 85, level: 85, icon: 'Network' },
+    { _id: 'sk_27', name: 'System Administration & Security', category: 'Network & Systems', proficiency: 82, level: 82, icon: 'Shield' }
   ],
   experience: [
     {
       _id: 'exp_1',
-      position: 'Software Developer & Lead Project Builder',
-      organization: 'Computer Science Department — St. Joseph University',
+      title: 'Software Developer & Project Lead',
+      position: 'Software Developer & Project Lead',
+      company: 'St. Joseph University Computer Science Lab',
+      organization: 'St. Joseph University Computer Science Lab',
       location: 'Dar es Salaam, Tanzania',
       startDate: 'Oct 2024',
       endDate: 'Present',
-      description: 'Leading collaborative software design projects, building full-stack web and mobile applications, and mentoring junior developers and peers.',
+      current: true,
+      description: [
+        'Architected full-stack web applications and academic management tools using React, Node.js, and MongoDB.',
+        'Implemented secure RESTful API architectures with JWT authentication, rate limiting, and role-based access control.',
+        'Mentored 20+ junior developers and peers in modern Git branching workflows, data structures, and responsive UI engineering.'
+      ],
       responsibilities: [
-        'Architected and deployed full-stack web applications using MERN stack (MongoDB, Express, React, Node.js).',
-        'Implemented secure RESTful API architectures with JWT authentication and RBAC middleware.',
-        'Designed normalized database schemas for MySQL and MongoDB collections.',
-        'Organized peer coding workshops on Git workflow, Linux system management, and web development fundamentals.'
+        'Architected full-stack web applications and academic management tools using React, Node.js, and MongoDB.',
+        'Implemented secure RESTful API architectures with JWT authentication, rate limiting, and role-based access control.',
+        'Mentored 20+ junior developers and peers in modern Git branching workflows, data structures, and responsive UI engineering.'
       ],
       technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Java', 'Git', 'Linux']
     },
     {
       _id: 'exp_2',
+      title: 'IT & Network Systems Intern',
       position: 'IT & Network Systems Intern',
+      company: 'Tanzania Technology Solutions',
       organization: 'Tanzania Technology Solutions',
       location: 'Dar es Salaam, Tanzania',
       startDate: 'Jul 2024',
       endDate: 'Sep 2024',
-      description: 'Gained hands-on experience in network configuration, database administration, and software maintenance.',
+      current: false,
+      description: [
+        'Configured local area network (LAN) switches and routers using Cisco Packet Tracer and CLI tooling.',
+        'Performed SQL database maintenance, query optimization, and periodic backup routines for internal ERP systems.',
+        'Assisted senior engineers in troubleshooting backend API endpoints and system permission policies.'
+      ],
       responsibilities: [
         'Configured local area network (LAN) switches and routers using Cisco Packet Tracer and CLI tooling.',
-        'Performed routine SQL database maintenance, indexing, and data backups for internal management tools.',
-        'Assisted senior engineers in troubleshooting backend API endpoints and user permissions issues.'
+        'Performed SQL database maintenance, query optimization, and periodic backup routines for internal ERP systems.',
+        'Assisted senior engineers in troubleshooting backend API endpoints and system permission policies.'
       ],
       technologies: ['Networking', 'Cisco Packet Tracer', 'MySQL', 'Python', 'Linux']
     }
@@ -235,17 +391,23 @@ export const memoryStore: InMemoryStore = {
   education: [
     {
       _id: 'edu_1',
-      institution: 'St. Joseph University in Tanzania',
       degree: 'Bachelor of Science in Computer Science',
+      institution: 'St. Joseph University in Tanzania (SJUIT)',
+      fieldOfStudy: 'Computer Science & Software Engineering',
+      startDate: '2022',
+      endDate: '2026 — Completed (Graduate)',
       startYear: '2022',
       endYear: '2026 — Completed (Graduate)',
-      description: 'Core Focus: Data Structures & Algorithms, Database Systems, Software Engineering, Computer Networks, Operating Systems, Web Technologies, and Cybersecurity.'
+      grade: 'First Class Honours',
+      activities: 'Lead Developer, Computer Science Society, Algorithm Study Group',
+      description: 'Comprehensive curriculum spanning Data Structures & Algorithms, Operating Systems, Database Management Systems, Computer Networks & Security, and Full-Stack Engineering.'
     }
   ],
   certifications: [
     {
       _id: 'cert_1',
       name: 'Cisco CCNA Network Fundamentals',
+      issuer: 'Cisco Networking Academy',
       issuingOrganization: 'Cisco Networking Academy',
       issueDate: '2024',
       credentialId: 'CSCO-CCNA-894102',
@@ -254,8 +416,9 @@ export const memoryStore: InMemoryStore = {
     },
     {
       _id: 'cert_2',
-      name: 'Full Stack Web Development Specialization',
-      issuingOrganization: 'Coursera / Meta',
+      name: 'Meta Full-Stack Web Development Specialization',
+      issuer: 'Meta / Coursera',
+      issuingOrganization: 'Meta / Coursera',
       issueDate: '2024',
       credentialId: 'META-FSWD-339211',
       credentialUrl: 'https://coursera.org/verify/meta-fswd',
@@ -264,6 +427,7 @@ export const memoryStore: InMemoryStore = {
     {
       _id: 'cert_3',
       name: 'MongoDB Certified Developer Associate',
+      issuer: 'MongoDB University',
       issuingOrganization: 'MongoDB University',
       issueDate: '2025',
       credentialId: 'MDB-DEV-771029',
@@ -307,6 +471,61 @@ export const memoryStore: InMemoryStore = {
       title: 'Networking & Cybersecurity Basics',
       description: 'Setting up secure network topologies, firewall configurations, vulnerability checks, and security best practices.',
       icon: 'shield'
+    }
+  ],
+  articles: [
+    {
+      _id: 'art-1',
+      id: 'art-1',
+      title: 'Architecting Scalable Microservices with Node.js & Redis Caching',
+      date: 'February 18, 2026',
+      author: 'Elieza Mwakyoma',
+      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
+      excerpt: 'How to decouple monolithic REST backends into resilient microservices while maintaining sub-50ms latency using in-memory Redis caching.',
+      readTime: '6 min read',
+      category: 'Backend Architecture',
+      content: `When scaling web backends for high-concurrency traffic, monolithic Express servers often encounter bottlenecks in database I/O and CPU-bound middleware operations.
+
+In this deep dive, I explore the architectural patterns used in building the Mwakyoma Online Market platform:
+1. **Decoupling Services**: Isolating Authentication, Product Catalog, and Order Management into lightweight Express modules.
+2. **Redis In-Memory Caching**: Caching high-frequency read operations (such as product categories and popular listings) with strict Time-To-Live (TTL) eviction policies.
+3. **Connection Pooling**: Optimizing MongoDB connection pools to eliminate handshake latency during peak traffic spikes.
+
+By implementing asynchronous job queues with BullMQ and caching database reads, we achieved an 80% reduction in average response latency under simulated load tests.`
+    },
+    {
+      _id: 'art-2',
+      id: 'art-2',
+      title: 'Optimizing Hospital Triage with Priority Queue Algorithms in Python',
+      date: 'January 24, 2026',
+      author: 'Elieza Mwakyoma',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
+      excerpt: 'Examining the mathematical algorithms behind the Smart Hospital Queue System to reduce emergency wait times and eliminate triage bottlenecks.',
+      readTime: '8 min read',
+      category: 'Algorithms & Architecture',
+      content: `Traditional First-In, First-Out (FIFO) queue systems are fundamentally unsafe for medical environments. When emergency cases arrive, manual reshuffling leads to confusion and critical delays.
+
+To solve this for our Smart Hospital Queue project, we designed a multi-level priority queue algorithm:
+- **Dynamic Severity Scoring**: Assigning weight coefficients based on vital indicators (SpO2, heart rate, pain scale) and elapsed waiting duration to prevent starvation.
+- **WebSocket Synchronization**: Broadcasting instant updates to doctor consultation terminals and waiting area display screens in real-time.
+- **Simulation Results**: In benchmark simulations with 500 patient batches, emergency case treatment latency was reduced by 64% without causing severe delays for routine outpatients.`
+    },
+    {
+      _id: 'art-3',
+      id: 'art-3',
+      title: 'Offline-First Mobile Architecture: SQLite Synchronization in Android',
+      date: 'December 12, 2025',
+      author: 'Elieza Mwakyoma',
+      image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
+      excerpt: 'A practical guide to building resilient Android productivity tools that function seamlessly without constant internet connectivity.',
+      readTime: '5 min read',
+      category: 'Mobile Engineering',
+      content: `In emerging markets and university campuses, reliable internet connectivity cannot be taken for granted. Software must be built with an offline-first philosophy.
+
+In developing the MwakyomaX Android utility application, we adhered to three core principles:
+1. **Local-First Truth**: The SQLite database acts as the single source of truth for the UI layer via Room persistence abstraction.
+2. **Delta Sync Queues**: Changes made offline are recorded in a lightweight local transaction ledger with UUID timestamping.
+3. **Background Sync Worker**: Android WorkManager monitors network availability and securely pushes batched updates to the cloud API when connectivity is restored.`
     }
   ],
   messages: [

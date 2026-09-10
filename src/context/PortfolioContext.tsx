@@ -18,7 +18,9 @@ import {
   fetchSkills,
   fetchExperience,
   fetchEducation,
-  fetchCertifications
+  fetchCertifications,
+  fetchArticles,
+  fetchCategories
 } from '../services/api';
 
 interface PortfolioContextType {
@@ -75,8 +77,8 @@ const PortfolioContext = createContext<PortfolioContextType | undefined>(undefin
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState(PORTFOLIO_SETTINGS);
   const [projects, setProjects] = useState<Project[]>(PROJECTS_DATA);
-  const [categories] = useState<PortfolioCategory[]>(DOMAIN_CATEGORIES);
-  const [articles] = useState<BlogArticle[]>(BLOG_ARTICLES);
+  const [categories, setCategories] = useState<PortfolioCategory[]>(DOMAIN_CATEGORIES);
+  const [articles, setArticles] = useState<BlogArticle[]>(BLOG_ARTICLES);
   const [skills, setSkills] = useState<Skill[]>(SKILLS_DATA);
   const [experiences, setExperiences] = useState<Experience[]>(EXPERIENCE_DATA);
   const [educations, setEducations] = useState<Education[]>(EDUCATION_DATA);
@@ -87,19 +89,23 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const loadLive = async () => {
     try {
-      const [p, s, e, ed, c, st] = await Promise.all([
+      const [p, s, e, ed, c, st, art, cat] = await Promise.all([
         fetchProjects().catch(() => null),
         fetchSkills().catch(() => null),
         fetchExperience().catch(() => null),
         fetchEducation().catch(() => null),
         fetchCertifications().catch(() => null),
         fetchSettings().catch(() => null),
+        fetchArticles().catch(() => null),
+        fetchCategories().catch(() => null),
       ]);
       if (p?.data?.data && p.data.data.length > 0) setProjects(p.data.data);
       if (s?.data?.data && s.data.data.length > 0) setSkills(s.data.data);
       if (e?.data?.data && e.data.data.length > 0) setExperiences(e.data.data);
       if (ed?.data?.data && ed.data.data.length > 0) setEducations(ed.data.data);
       if (c?.data?.data && c.data.data.length > 0) setCertifications(c.data.data);
+      if (art?.data?.data && art.data.data.length > 0) setArticles(art.data.data);
+      if (cat?.data?.data && cat.data.data.length > 0) setCategories(cat.data.data);
       if (st?.data?.data) {
         setSettings((prev) => ({ ...prev, ...st.data.data }));
       }

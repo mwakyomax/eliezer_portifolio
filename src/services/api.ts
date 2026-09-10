@@ -7,8 +7,10 @@ import {
   Certification, 
   Service, 
   Message, 
-  PortfolioSettings 
+  PortfolioSettings,
+  BlogArticle 
 } from '../types';
+import { PortfolioCategory } from '../data/portfolioData';
 
 // Live Render backend URL:
 const API_URL = 'https://eliezer-portifolio.onrender.com/api';
@@ -30,6 +32,25 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Resilient fallback: If live Render URL is unreachable or blocked by CORS, retry locally on /api
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (
+      (!error.response || error.code === 'ERR_NETWORK') &&
+      error.config &&
+      !error.config.__isRetry &&
+      error.config.baseURL !== '/api' &&
+      typeof window !== 'undefined'
+    ) {
+      error.config.__isRetry = true;
+      error.config.baseURL = '/api';
+      return api(error.config);
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Auth
 export const loginAdmin = (data: { email: string; password: string }) => api.post('/auth/login', data);
@@ -73,14 +94,29 @@ export const createService = (data: Partial<Service>) => api.post<{ success: boo
 export const updateService = (id: string, data: Partial<Service>) => api.put<{ success: boolean; data: Service; message: string }>(`/services/${id}`, data);
 export const deleteService = (id: string) => api.delete<{ success: boolean; message: string }>(`/services/${id}`);
 
+// Articles / Tech Journal
+export const fetchArticles = () => api.get<{ success: boolean; count: number; data: BlogArticle[] }>('/articles');
+export const createArticle = (data: Partial<BlogArticle>) => api.post<{ success: boolean; data: BlogArticle; message: string }>('/articles', data);
+export const updateArticle = (id: string, data: Partial<BlogArticle>) => api.put<{ success: boolean; data: BlogArticle; message: string }>(`/articles/${id}`, data);
+export const deleteArticle = (id: string) => api.delete<{ success: boolean; message: string }>(`/articles/${id}`);
+
+// Categories
+export const fetchCategories = () => api.get<{ success: boolean; count: number; data: PortfolioCategory[] }>('/categories');
+export const createCategory = (data: Partial<PortfolioCategory>) => api.post<{ success: boolean; data: PortfolioCategory; message: string }>('/categories', data);
+export const updateCategory = (id: string, data: Partial<PortfolioCategory>) => api.put<{ success: boolean; data: PortfolioCategory; message: string }>(`/categories/${id}`, data);
+export const deleteCategory = (id: string) => api.delete<{ success: boolean; message: string }>(`/categories/${id}`);
+
 // Messages
 export const sendMessage = (data: { name: string; email: string; subject: string; message: string }) => api.post<{ success: boolean; message: string }>('/messages', data);
 export const fetchMessages = () => api.get<{ success: boolean; count: number; data: Message[] }>('/messages');
 export const toggleMessageRead = (id: string, isRead: boolean) => api.put<{ success: boolean; data: Message }>(`/messages/${id}/read`, { isRead });
 export const deleteMessage = (id: string) => api.delete<{ success: boolean; message: string }>(`/messages/${id}`);
 
-// Settings
+// Settings & Seeding
 export const fetchSettings = () => api.get<{ success: boolean; data: PortfolioSettings }>('/settings');
 export const updateSettings = (data: Partial<PortfolioSettings>) => api.put<{ success: boolean; data: PortfolioSettings; message: string }>('/settings', data);
+export const seedDatabase = () => api.post<{ success: boolean; message: string; counts?: any }>('/settings/seed');
 
 export default api;
+
+

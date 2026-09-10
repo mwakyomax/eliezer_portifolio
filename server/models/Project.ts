@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IProject extends Document {
   title: string;
   description: string;
-  category: 'Web Development' | 'Mobile' | 'Algorithms' | 'Database' | 'Networking' | 'Other';
+  category: string;
   technologies: string[];
   image: string;
   githubUrl: string;
@@ -22,7 +22,6 @@ const ProjectSchema: Schema = new Schema({
   category: { 
     type: String, 
     required: true,
-    enum: ['Web Development', 'Mobile', 'Algorithms', 'Database', 'Networking', 'Other'],
     default: 'Web Development'
   },
   technologies: { type: [String], default: [] },

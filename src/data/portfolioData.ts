@@ -415,3 +415,43 @@ export const CERTIFICATIONS_DATA: Certification[] = [
     credentialUrl: 'https://university.mongodb.com/verify'
   }
 ];
+
+export const SERVICES_DATA: Service[] = [
+  {
+    _id: 'serv_1',
+    title: 'Full-Stack Web Development',
+    description: 'Building modern, fast, and responsive single-page and multi-page web applications using React, Node.js, Express, and Tailwind CSS.',
+    icon: 'layout'
+  },
+  {
+    _id: 'serv_2',
+    title: 'Database Architecture & Design',
+    description: 'Designing efficient, scalable MongoDB document schemas and SQL relational databases with proper indexing and relationship constraints.',
+    icon: 'database'
+  },
+  {
+    _id: 'serv_3',
+    title: 'RESTful API Development',
+    description: 'Developing secure, high-performance REST APIs with Node.js/Express, JWT authentication, data validation, and clear documentation.',
+    icon: 'server'
+  },
+  {
+    _id: 'serv_4',
+    title: 'Mobile Application Development',
+    description: 'Crafting native Android utilities and applications using Java/Kotlin, Android Studio, and local SQLite data persistence.',
+    icon: 'smartphone'
+  },
+  {
+    _id: 'serv_5',
+    title: 'Software System Design',
+    description: 'Structuring software architecture, object-oriented solutions, and clean code principles to solve complex real-world business challenges.',
+    icon: 'cpu'
+  },
+  {
+    _id: 'serv_6',
+    title: 'Networking & Cybersecurity Basics',
+    description: 'Setting up secure network topologies, firewall configurations, vulnerability checks, and security best practices.',
+    icon: 'shield'
+  }
+];
+

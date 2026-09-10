@@ -17,6 +17,8 @@ import certificationRoutes from "./server/routes/certificationRoutes.js";
 import serviceRoutes from "./server/routes/serviceRoutes.js";
 import messageRoutes from "./server/routes/messageRoutes.js";
 import settingsRoutes from "./server/routes/settingsRoutes.js";
+import articleRoutes from "./server/routes/articleRoutes.js";
+import categoryRoutes from "./server/routes/categoryRoutes.js";
 import { errorHandler } from "./server/middleware/errorMiddleware.js";
 
 dotenv.config();
@@ -60,6 +62,8 @@ async function startServer() {
   app.use('/api/services', serviceRoutes);
   app.use('/api/messages', messageRoutes);
   app.use('/api/settings', settingsRoutes);
+  app.use('/api/articles', articleRoutes);
+  app.use('/api/categories', categoryRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', service: 'Elieza Mwakyoma Portfolio API', timestamp: new Date() });
