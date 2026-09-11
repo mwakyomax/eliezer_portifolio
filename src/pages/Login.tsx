@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Lock, Mail, ArrowLeft, AlertCircle, Eye, EyeOff, Sparkles, ArrowRight } from 'lucide-react';
 import { loginAdmin } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { SEO } from '../components/SEO';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -39,6 +40,7 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFBFB] text-[#18181B] flex flex-col justify-between relative overflow-hidden font-sans">
+      <SEO title="Admin Authentication | Elieza Mwakyoma" description="Administrative authentication portal." noIndex={true} canonicalPath="/login" />
       {/* Background Decorative Ambient Blobs matching public site */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#FAF3F5] rounded-full blur-3xl -z-10 opacity-70 pointer-events-none" />
       <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-[#FFF8F9] rounded-full blur-3xl -z-10 opacity-80 pointer-events-none" />

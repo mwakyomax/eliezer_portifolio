@@ -1,0 +1,16 @@
+{
+  "name": "Elieza Mwakyoma - Software Developer & Networker",
+  "short_name": "Elieza Portfolio",
+  "description": "Professional developer & networking portfolio for Elieza Mwakyoma, featuring full-stack web, mobile Android, networking systems, and database engineering.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBFB",
+  "theme_color": "#761A30",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

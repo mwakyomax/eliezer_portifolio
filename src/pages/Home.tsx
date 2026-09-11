@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { usePortfolio } from '../context/PortfolioContext';
+import { SEO } from '../components/SEO';
 import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
 import { PopularCategory } from '../components/PopularCategory';
@@ -17,10 +19,18 @@ import { ContactModal } from '../components/ContactModal';
 import { Toast } from '../components/Toast';
 
 export const Home: React.FC = () => {
+  const { settings } = usePortfolio();
   const [contactOpen, setContactOpen] = useState(false);
+
+  const seoTitle = settings?.fullName && settings?.title
+    ? `${settings.fullName} - ${settings.title}`
+    : 'Elieza Mwakyoma - Software Developer & Networker';
+
+  const seoDescription = settings?.bio || 'Professional developer & networking portfolio for Elieza Mwakyoma, featuring full-stack web, mobile Android, networking systems, and database engineering.';
 
   return (
     <div className="min-h-screen bg-[#FDFBFB] text-[#1E1E24] flex flex-col justify-between selection:bg-[#761A30] selection:text-white">
+      <SEO title={seoTitle} description={seoDescription} canonicalPath="/" />
       {/* Top Navbar */}
       <Navbar onOpenContact={() => setContactOpen(true)} />
 

@@ -1,0 +1,8 @@
+# robots.txt for Elieza Mwakyoma Portfolio
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://eliezamwakyoma.com/sitemap.xml

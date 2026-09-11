@@ -69,6 +69,20 @@ async function startServer() {
     res.json({ status: 'ok', service: 'Elieza Mwakyoma Portfolio API', timestamp: new Date() });
   });
 
+  // Static public assets (robots.txt, sitemap.xml, site.webmanifest, etc.)
+  const publicPath = path.join(process.cwd(), 'public');
+  app.use(express.static(publicPath));
+
+  app.get('/robots.txt', (req, res) => {
+    res.type('text/plain');
+    res.sendFile(path.join(publicPath, 'robots.txt'));
+  });
+
+  app.get('/sitemap.xml', (req, res) => {
+    res.type('application/xml');
+    res.sendFile(path.join(publicPath, 'sitemap.xml'));
+  });
+
   // Error Handler Middleware
   app.use(errorHandler);
 

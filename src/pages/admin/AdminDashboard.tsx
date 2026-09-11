@@ -15,6 +15,7 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import { useLiquidNav } from '../../context/LiquidNavContext';
 import { processGalleryImage } from '../../utils/imageUtils';
 import defaultHeroPortrait from '../../assets/images/elieza_official_portrait_1788279969619.jpg';
+import { SEO } from '../../components/SEO';
 import { 
   DEFAULT_PROFILE_IMAGE,
   PROJECTS_DATA,
@@ -673,6 +674,7 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFBFB] text-[#18181B] flex flex-col font-sans">
+      <SEO title="Portfolio Admin Panel | Elieza Mwakyoma" description="Administrative management console." noIndex={true} canonicalPath="/admin" />
       
       {/* Top Header Matching Public Site Navbar */}
       <header className="sticky top-0 z-40 bg-[#FDFBFB]/90 backdrop-blur-md border-b border-[#F1EBEB] transition-all">
