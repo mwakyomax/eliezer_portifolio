@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 // Pre-generated images
-export const DEFAULT_PROFILE_IMAGE = '/images/elieza_official_portrait_1788279969619.jpg';
+export const DEFAULT_PROFILE_IMAGE = '';
 export const DEFAULT_MARKET_IMAGE = '/images/project_market_1786536018642.jpg';
 export const DEFAULT_HOSPITAL_IMAGE = '/images/project_hospital_1786536031716.jpg';
 

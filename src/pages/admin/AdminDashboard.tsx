@@ -14,10 +14,8 @@ import { useAuth } from '../../context/AuthContext';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { useLiquidNav } from '../../context/LiquidNavContext';
 import { processGalleryImage } from '../../utils/imageUtils';
-import defaultHeroPortrait from '../../assets/images/elieza_official_portrait_1788279969619.jpg';
 import { SEO } from '../../components/SEO';
 import { 
-  DEFAULT_PROFILE_IMAGE,
   PROJECTS_DATA,
   SKILLS_DATA,
   EXPERIENCE_DATA,
@@ -593,11 +591,11 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleResetProfileImage = async () => {
+  const handleRemoveProfileImage = async () => {
     if (settings) {
       const newSettings = {
         ...settings,
-        profileImage: DEFAULT_PROFILE_IMAGE
+        profileImage: ''
       };
       setSettings(newSettings);
       updateSettingsState(newSettings);
@@ -606,7 +604,7 @@ export const AdminDashboard: React.FC = () => {
         const { _id, id, __v, createdAt, updatedAt, ...cleanUpdate } = newSettings;
         await updateSettings(cleanUpdate);
       } catch (e) {}
-      notify('Reset to default official portrait.');
+      notify('Profile photo removed.');
     }
   };
 
@@ -1717,17 +1715,24 @@ export const AdminDashboard: React.FC = () => {
 
                   {/* Arched Burgundy Container matching main site Hero */}
                   <div className="relative w-48 sm:w-56 aspect-[3/4] rounded-t-[100px] sm:rounded-t-[120px] rounded-b-[28px] overflow-hidden p-1.5 bg-gradient-to-b from-[#761A30] via-[#5E1426] to-[#2B0811] shadow-xl ring-4 ring-[#761A30]/10">
-                    <div className="w-full h-full rounded-t-[94px] sm:rounded-t-[114px] rounded-b-[22px] overflow-hidden bg-[#1E0911] relative">
-                      <img
-                        src={settings.profileImage && !settings.profileImage.startsWith('/src/assets/images/') ? settings.profileImage : defaultHeroPortrait}
-                        alt={settings.fullName || 'Elieza Mwakyoma'}
-                        referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = defaultHeroPortrait;
-                        }}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    <div className="w-full h-full rounded-t-[94px] sm:rounded-t-[114px] rounded-b-[22px] overflow-hidden bg-[#1E0911] relative flex items-center justify-center">
+                      {settings.profileImage ? (
+                        <img
+                          src={settings.profileImage}
+                          alt={settings.fullName || 'Elieza Mwakyoma'}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center">
+                          <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white font-serif font-black text-2xl mb-2 border border-white/15">
+                            {settings.fullName ? settings.fullName.charAt(0) : 'E'}
+                          </div>
+                          <span className="text-xs font-bold text-white/90">No Image Uploaded</span>
+                          <span className="text-[10px] text-white/60 mt-0.5">Upload using controls on the right</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                     </div>
 
                     {/* Floating Availability Badge */}
@@ -1739,28 +1744,33 @@ export const AdminDashboard: React.FC = () => {
 
                   {/* Circle Avatar Mini Preview */}
                   <div className="mt-4 flex items-center space-x-3 bg-white px-4 py-2 rounded-2xl border border-[#E4E4E7] shadow-xs">
-                    <img
-                      src={settings.profileImage && !settings.profileImage.startsWith('/src/assets/images/') ? settings.profileImage : defaultHeroPortrait}
-                      alt="Avatar"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = defaultHeroPortrait;
-                      }}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-[#761A30]"
-                    />
+                    {settings.profileImage ? (
+                      <img
+                        src={settings.profileImage}
+                        alt="Avatar"
+                        className="w-10 h-10 rounded-full object-cover border-2 border-[#761A30]"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-[#FAF3F5] text-[#761A30] font-bold text-sm flex items-center justify-center border-2 border-[#761A30]">
+                        {settings.fullName ? settings.fullName.charAt(0) : 'E'}
+                      </div>
+                    )}
                     <div className="text-left">
                       <p className="text-xs font-bold text-[#18181B] leading-none">{settings.fullName || 'Elieza Mwakyoma'}</p>
                       <p className="text-[10px] text-[#71717A] mt-0.5 leading-none">Avatar Format (Navbar/Bio)</p>
                     </div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleResetProfileImage}
-                    className="mt-3 inline-flex items-center space-x-1.5 text-xs font-bold text-[#71717A] hover:text-[#761A30] transition-colors"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Reset to Default Official Portrait</span>
-                  </button>
+                  {settings.profileImage && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveProfileImage}
+                      className="mt-3 inline-flex items-center space-x-1.5 text-xs font-bold text-rose-600 hover:text-rose-700 transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Remove Profile Photo</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Right: Upload Dropzone & Controls */}

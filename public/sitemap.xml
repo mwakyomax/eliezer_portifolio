@@ -3,14 +3,9 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://eliezamwakyoma.com/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-09-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://eliezamwakyoma.com/images/elieza_official_portrait_1788279969619.jpg</image:loc>
-      <image:title>Elieza Mwakyoma - Software Developer &amp; Networker</image:title>
-      <image:caption>Official portrait of Elieza Mwakyoma, Software Developer &amp; Network Engineer with B.Sc. in Computer Science</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>https://eliezamwakyoma.com/#featured-projects</loc>

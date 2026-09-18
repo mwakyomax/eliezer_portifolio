@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { User, Target, Award, Code, Database, Shield, Cpu, BookOpen, Layers } from 'lucide-react';
 import { PortfolioSettings } from '../types';
-import defaultProfilePic from '../assets/images/elieza_official_portrait_1788279969619.jpg';
 
 interface AboutProps {
   settings?: PortfolioSettings;
@@ -16,11 +15,11 @@ export const About: React.FC<AboutProps> = ({ settings }) => {
   }, [settings?.profileImage]);
 
   const profileImage = React.useMemo(() => {
-    if (imgError) return defaultProfilePic;
+    if (imgError) return '';
     const img = settings?.profileImage;
-    if (!img) return defaultProfilePic;
+    if (!img) return '';
     if (img.startsWith('/src/assets/images/') || img.includes('elieza_official_portrait')) {
-      return defaultProfilePic;
+      return '';
     }
     return img;
   }, [settings?.profileImage, imgError]);
@@ -72,13 +71,23 @@ export const About: React.FC<AboutProps> = ({ settings }) => {
             className="lg:col-span-5 flex justify-center"
           >
             <div className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden border border-slate-800 dark:border-slate-800 light:border-slate-200 bg-slate-950 shadow-xl group">
-              <img
-                src={profileImage}
-                alt="Elieza Mwakyoma Profile"
-                referrerPolicy="no-referrer"
-                onError={() => setImgError(true)}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Elieza Mwakyoma Profile"
+                  referrerPolicy="no-referrer"
+                  onError={() => setImgError(true)}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-[#2B0811] p-8 text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#761A30] to-blue-600 flex items-center justify-center text-white font-serif font-black text-3xl shadow-lg border border-white/20 mb-4">
+                    EM
+                  </div>
+                  <h4 className="text-white font-bold text-lg">Elieza Mwakyoma</h4>
+                  <p className="text-blue-400 text-xs font-mono mt-1">Software Developer & Networker</p>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
               
               <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl bg-slate-900/90 dark:bg-slate-900/90 light:bg-white/90 backdrop-blur-md border border-slate-800 dark:border-slate-800 light:border-slate-200">

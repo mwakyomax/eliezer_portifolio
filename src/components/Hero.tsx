@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ArrowRight, Star, Sparkles, Download, CheckCircle2, Terminal, Code, Cpu, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Star, Sparkles, Download, CheckCircle2, Terminal, Code, Cpu, ShieldCheck, User } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { motion } from 'motion/react';
-import defaultHeroPortrait from '../assets/images/elieza_official_portrait_1788279969619.jpg';
 
 export const Hero: React.FC = () => {
   const { settings, setIsSpecialHighlightOpen } = usePortfolio();
@@ -13,14 +12,14 @@ export const Hero: React.FC = () => {
     setImgError(false);
   }, [settings?.profileImage]);
 
-  // Safely resolve the display image
+  // Safely resolve the display image uploaded by admin
   const displayImage = useMemo(() => {
-    if (imgError) return defaultHeroPortrait;
+    if (imgError) return '';
     const img = settings?.profileImage;
-    if (!img) return defaultHeroPortrait;
-    // Normalize broken or raw dev paths
+    if (!img) return '';
+    // Normalize broken or obsolete default paths
     if (img.startsWith('/src/assets/images/') || img.includes('elieza_official_portrait')) {
-      return defaultHeroPortrait;
+      return '';
     }
     return img;
   }, [settings?.profileImage, imgError]);
@@ -123,16 +122,41 @@ export const Hero: React.FC = () => {
               {/* Decorative arched inner glow */}
               <div className="absolute inset-0 rounded-t-[140px] sm:rounded-t-[180px] rounded-b-[44px] border-4 border-white/15 pointer-events-none" />
 
-              {/* Developer Portrait Image */}
-              <img
-                src={displayImage}
-                alt="Elieza Mwakyoma - Software Developer & Networker"
-                referrerPolicy="no-referrer"
-                fetchPriority="high"
-                decoding="async"
-                onError={() => setImgError(true)}
-                className="w-full h-full object-cover rounded-t-[130px] sm:rounded-t-[170px] rounded-b-[38px] group-hover:scale-105 transition-transform duration-700"
-              />
+              {/* Developer Portrait Image or Elegant Monogram Avatar */}
+              {displayImage ? (
+                <img
+                  src={displayImage}
+                  alt="Elieza Mwakyoma - Software Developer & Networker"
+                  referrerPolicy="no-referrer"
+                  fetchPriority="high"
+                  decoding="async"
+                  onError={() => setImgError(true)}
+                  className="w-full h-full object-cover rounded-t-[130px] sm:rounded-t-[170px] rounded-b-[38px] group-hover:scale-105 transition-transform duration-700"
+                />
+              ) : (
+                <div className="w-full h-full rounded-t-[130px] sm:rounded-t-[170px] rounded-b-[38px] bg-gradient-to-b from-[#2B0811] via-[#1E0911] to-[#120408] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                  {/* Subtle ambient light behind avatar */}
+                  <div className="w-36 h-36 rounded-full bg-[#761A30]/30 blur-2xl absolute" />
+                  
+                  {/* Monogram Crest */}
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-[#761A30] to-[#3B0C18] border-2 border-white/20 shadow-2xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                    <span className="text-white font-serif font-black text-3xl sm:text-4xl tracking-wider">
+                      EM
+                    </span>
+                  </div>
+
+                  <h3 className="text-white font-black text-lg sm:text-xl tracking-tight">
+                    {settings?.fullName || 'Elieza Mwakyoma'}
+                  </h3>
+                  <p className="text-white/70 text-xs mt-1 font-medium max-w-[200px]">
+                    Software Developer & Network Specialist
+                  </p>
+
+                  <div className="mt-4 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/90 text-[11px] font-bold tracking-wider uppercase">
+                    B.Sc. Computer Science
+                  </div>
+                </div>
+              )}
             </motion.div>
 
           </div>
