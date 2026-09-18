@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Github, Sparkles, Layers } from 'lucide-react';
+import { Github, Sparkles, Layers, ArrowRight } from 'lucide-react';
 import { Project } from '../types';
 
 interface ProjectCardProps {
@@ -71,7 +71,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelect }) =
           <div className="pt-3 border-t border-slate-800/80 dark:border-slate-800/80 light:border-slate-200 flex items-center justify-between text-xs">
             <span className="text-blue-400 font-medium group-hover:underline flex items-center space-x-1">
               <span>View Details</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </span>
 
             <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
@@ -84,17 +84,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelect }) =
                   title="View GitHub Repository"
                 >
                   <Github className="w-4 h-4" />
-                </a>
-              )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors"
-                  title="View Live Demo"
-                >
-                  <ExternalLink className="w-4 h-4" />
                 </a>
               )}
             </div>

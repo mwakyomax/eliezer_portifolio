@@ -173,7 +173,6 @@ export const AdminDashboard: React.FC = () => {
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
       image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800',
       githubUrl: 'https://github.com/eliezamwakyoma',
-      liveUrl: '',
       featured: true,
       problemStatement: '',
       solution: ''
@@ -1183,20 +1182,9 @@ export const AdminDashboard: React.FC = () => {
                             target="_blank" 
                             rel="noreferrer" 
                             className="p-2 rounded-full bg-[#FAFAFA] hover:bg-[#FAF3F5] text-[#52525B] hover:text-[#761A30] border border-[#E4E4E7] transition-colors"
-                            title="GitHub Repo"
+                            title="GitHub Repository"
                           >
                             <Github className="w-3.5 h-3.5" />
-                          </a>
-                        )}
-                        {proj.liveUrl && (
-                          <a 
-                            href={proj.liveUrl} 
-                            target="_blank" 
-                            rel="noreferrer" 
-                            className="p-2 rounded-full bg-[#FAFAFA] hover:bg-[#FAF3F5] text-[#52525B] hover:text-[#761A30] border border-[#E4E4E7] transition-colors"
-                            title="Live Demo"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         )}
                       </div>
@@ -2288,28 +2276,15 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#18181B]">GitHub Repository URL</label>
-                  <input
-                    type="text"
-                    value={editingItem.githubUrl || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, githubUrl: e.target.value })}
-                    placeholder="https://github.com/..."
-                    className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-sm focus:outline-none focus:border-[#761A30]"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#18181B]">Live Demo / Deployment URL</label>
-                  <input
-                    type="text"
-                    value={editingItem.liveUrl || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, liveUrl: e.target.value })}
-                    placeholder="https://..."
-                    className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-sm focus:outline-none focus:border-[#761A30]"
-                  />
-                </div>
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-[#18181B]">GitHub Repository URL</label>
+                <input
+                  type="text"
+                  value={editingItem.githubUrl || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, githubUrl: e.target.value })}
+                  placeholder="https://github.com/..."
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-sm focus:outline-none focus:border-[#761A30]"
+                />
               </div>
 
               {/* Technologies Tag Editor */}

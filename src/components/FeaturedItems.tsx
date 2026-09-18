@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Bookmark, 
-  ExternalLink, 
   Eye, 
   Star, 
   Github, 
@@ -171,25 +170,13 @@ export const FeaturedItems: React.FC = () => {
                     </span>
 
                     <div className="flex items-center space-x-1.5">
-                      {project.liveUrl && (
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="p-1.5 rounded-lg bg-white text-[#52525B] hover:text-[#761A30] hover:bg-[#FAF3F5] border border-[#E4E4E7] transition-colors cursor-pointer"
-                          title="Open Live Deployment"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
                       <a
                         href={project.githubUrl}
                         target="_blank"
                         rel="noreferrer"
                         onClick={(e) => e.stopPropagation()}
                         className="p-1.5 rounded-lg bg-white text-[#52525B] hover:text-[#761A30] hover:bg-[#FAF3F5] border border-[#E4E4E7] transition-colors cursor-pointer"
-                        title="View Source on GitHub"
+                        title="GitHub Repository"
                       >
                         <Github className="w-3.5 h-3.5" />
                       </a>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
   X, 
-  ExternalLink, 
   Github, 
   Bookmark, 
   CheckCircle2, 
@@ -153,17 +152,6 @@ export const ProductQuickViewModal: React.FC = () => {
               </button>
 
               <div className="flex items-center space-x-3">
-                {activeProject.liveUrl && (
-                  <a
-                    href={activeProject.liveUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-[#761A30] hover:bg-[#5E1426] text-white text-xs font-bold tracking-wider uppercase transition-all shadow-md"
-                  >
-                    <span>Live Demo</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                )}
                 <a
                   href={activeProject.githubUrl}
                   target="_blank"

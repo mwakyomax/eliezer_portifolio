@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, Github, CheckCircle2, AlertCircle, Lightbulb, Sparkles } from 'lucide-react';
+import { X, Github, CheckCircle2, AlertCircle, Lightbulb, Sparkles } from 'lucide-react';
 import { Project } from '../types';
 
 interface ProjectModalProps {
@@ -157,19 +157,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                   className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700"
                 >
                   <Github className="w-4 h-4" />
-                  <span>GitHub Repo</span>
-                </a>
-              )}
-
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-blue-600/20 transition-all flex items-center space-x-2"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  <span>Live Demo</span>
+                  <span>GitHub Repository</span>
                 </a>
               )}
             </div>

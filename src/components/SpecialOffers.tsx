@@ -57,7 +57,7 @@ export const SpecialOffers: React.FC = () => {
                   onClick={() => setIsSpecialHighlightOpen(true)}
                   className="inline-flex items-center space-x-2 px-8 py-3.5 rounded-full bg-white hover:bg-[#FAF8F8] text-[#761A30] font-black text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-100"
                 >
-                  <span>View Case Studies & Live Demos</span>
+                  <span>View Project Case Studies</span>
                   <ArrowRight className="w-4 h-4 text-[#761A30]" />
                 </button>
               </div>
