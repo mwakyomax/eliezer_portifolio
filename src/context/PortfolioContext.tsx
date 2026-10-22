@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Project, Skill, Experience, Education, Certification, BlogArticle, Message, PortfolioSettings } from '../types';
+import { Project, Skill, Experience, Education, Certification, Service, BlogArticle, Message, PortfolioSettings } from '../types';
 import { 
   PORTFOLIO_SETTINGS, 
   PROJECTS_DATA, 
@@ -9,6 +9,7 @@ import {
   EXPERIENCE_DATA, 
   EDUCATION_DATA, 
   CERTIFICATIONS_DATA,
+  SERVICES_DATA,
   PortfolioCategory 
 } from '../data/portfolioData';
 import { 
@@ -19,6 +20,7 @@ import {
   fetchExperience,
   fetchEducation,
   fetchCertifications,
+  fetchServices,
   fetchArticles,
   fetchCategories
 } from '../services/api';
@@ -26,12 +28,19 @@ import {
 interface PortfolioContextType {
   settings: typeof PORTFOLIO_SETTINGS;
   projects: Project[];
+  setProjects: (projects: Project[] | ((prev: Project[]) => Project[])) => void;
   categories: PortfolioCategory[];
   articles: BlogArticle[];
   skills: Skill[];
+  setSkills: (skills: Skill[] | ((prev: Skill[]) => Skill[])) => void;
   experiences: Experience[];
+  setExperiences: (experiences: Experience[] | ((prev: Experience[]) => Experience[])) => void;
   educations: Education[];
+  setEducations: (educations: Education[] | ((prev: Education[]) => Education[])) => void;
   certifications: Certification[];
+  setCertifications: (certifications: Certification[] | ((prev: Certification[]) => Certification[])) => void;
+  services: Service[];
+  setServices: (services: Service[] | ((prev: Service[]) => Service[])) => void;
 
   // Filter & Search
   selectedCategory: string;
@@ -75,6 +84,7 @@ interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Settings with persistent localStorage cache
   const [settings, setSettings] = useState(() => {
     try {
       const cached = localStorage.getItem('elieza_portfolio_settings');
@@ -84,20 +94,149 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     } catch (e) {}
     return PORTFOLIO_SETTINGS;
   });
-  const [projects, setProjects] = useState<Project[]>(PROJECTS_DATA);
+
+  // Projects with persistent localStorage cache
+  const [projects, setProjectsState] = useState<Project[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_projects');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return PROJECTS_DATA;
+  });
+
+  // Skills with persistent localStorage cache
+  const [skills, setSkillsState] = useState<Skill[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_skills');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return SKILLS_DATA;
+  });
+
+  // Experience with persistent localStorage cache
+  const [experiences, setExperiencesState] = useState<Experience[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_experience');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return EXPERIENCE_DATA;
+  });
+
+  // Education with persistent localStorage cache
+  const [educations, setEducationsState] = useState<Education[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_education');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return EDUCATION_DATA;
+  });
+
+  // Certifications with persistent localStorage cache
+  const [certifications, setCertificationsState] = useState<Certification[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_certifications');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return CERTIFICATIONS_DATA;
+  });
+
+  // Services with persistent localStorage cache
+  const [services, setServicesState] = useState<Service[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_services');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return SERVICES_DATA;
+  });
+
   const [categories, setCategories] = useState<PortfolioCategory[]>(DOMAIN_CATEGORIES);
   const [articles, setArticles] = useState<BlogArticle[]>(BLOG_ARTICLES);
-  const [skills, setSkills] = useState<Skill[]>(SKILLS_DATA);
-  const [experiences, setExperiences] = useState<Experience[]>(EXPERIENCE_DATA);
-  const [educations, setEducations] = useState<Education[]>(EDUCATION_DATA);
-  const [certifications, setCertifications] = useState<Certification[]>(CERTIFICATIONS_DATA);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Synchronized state setters that immediately persist to localStorage
+  const setProjects = (updater: Project[] | ((prev: Project[]) => Project[])) => {
+    setProjectsState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_projects', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const setSkills = (updater: Skill[] | ((prev: Skill[]) => Skill[])) => {
+    setSkillsState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_skills', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const setExperiences = (updater: Experience[] | ((prev: Experience[]) => Experience[])) => {
+    setExperiencesState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_experience', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const setEducations = (updater: Education[] | ((prev: Education[]) => Education[])) => {
+    setEducationsState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_education', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const setCertifications = (updater: Certification[] | ((prev: Certification[]) => Certification[])) => {
+    setCertificationsState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_certifications', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const setServices = (updater: Service[] | ((prev: Service[]) => Service[])) => {
+    setServicesState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_services', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
   const loadLive = async () => {
     try {
-      const [p, s, e, ed, c, st, art, cat] = await Promise.all([
+      const [p, s, e, ed, c, st, art, cat, serv] = await Promise.all([
         fetchProjects().catch(() => null),
         fetchSkills().catch(() => null),
         fetchExperience().catch(() => null),
@@ -106,14 +245,33 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         fetchSettings().catch(() => null),
         fetchArticles().catch(() => null),
         fetchCategories().catch(() => null),
+        fetchServices().catch(() => null),
       ]);
-      if (p?.data?.data && p.data.data.length > 0) setProjects(p.data.data);
-      if (s?.data?.data && s.data.data.length > 0) setSkills(s.data.data);
-      if (e?.data?.data && e.data.data.length > 0) setExperiences(e.data.data);
-      if (ed?.data?.data && ed.data.data.length > 0) setEducations(ed.data.data);
-      if (c?.data?.data && c.data.data.length > 0) setCertifications(c.data.data);
-      if (art?.data?.data && art.data.data.length > 0) setArticles(art.data.data);
-      if (cat?.data?.data && cat.data.data.length > 0) setCategories(cat.data.data);
+
+      if (p?.data?.data && Array.isArray(p.data.data) && p.data.data.length > 0) {
+        setProjects(p.data.data);
+      }
+      if (s?.data?.data && Array.isArray(s.data.data) && s.data.data.length > 0) {
+        setSkills(s.data.data);
+      }
+      if (e?.data?.data && Array.isArray(e.data.data) && e.data.data.length > 0) {
+        setExperiences(e.data.data);
+      }
+      if (ed?.data?.data && Array.isArray(ed.data.data) && ed.data.data.length > 0) {
+        setEducations(ed.data.data);
+      }
+      if (c?.data?.data && Array.isArray(c.data.data) && c.data.data.length > 0) {
+        setCertifications(c.data.data);
+      }
+      if (serv?.data?.data && Array.isArray(serv.data.data) && serv.data.data.length > 0) {
+        setServices(serv.data.data);
+      }
+      if (art?.data?.data && Array.isArray(art.data.data) && art.data.data.length > 0) {
+        setArticles(art.data.data);
+      }
+      if (cat?.data?.data && Array.isArray(cat.data.data) && cat.data.data.length > 0) {
+        setCategories(cat.data.data);
+      }
       if (st?.data?.data) {
         setSettings((prev) => {
           const merged = { ...prev, ...st.data.data };
@@ -130,6 +288,34 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   useEffect(() => {
     loadLive();
+
+    // Re-sync across tabs when localStorage is updated
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'elieza_portfolio_projects' && e.newValue) {
+        try { setProjectsState(JSON.parse(e.newValue)); } catch {}
+      }
+      if (e.key === 'elieza_portfolio_settings' && e.newValue) {
+        try { setSettings(JSON.parse(e.newValue)); } catch {}
+      }
+      if (e.key === 'elieza_portfolio_skills' && e.newValue) {
+        try { setSkillsState(JSON.parse(e.newValue)); } catch {}
+      }
+      if (e.key === 'elieza_portfolio_experience' && e.newValue) {
+        try { setExperiencesState(JSON.parse(e.newValue)); } catch {}
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Refresh live data whenever user switches back to this tab/window
+    const handleFocus = () => {
+      loadLive();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const updateSettingsState = (newSettings: Partial<typeof PORTFOLIO_SETTINGS>) => {
@@ -211,12 +397,19 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       value={{
         settings,
         projects,
+        setProjects,
         categories,
         articles,
         skills,
+        setSkills,
         experiences,
+        setExperiences,
         educations,
+        setEducations,
         certifications,
+        setCertifications,
+        services,
+        setServices,
         selectedCategory,
         setSelectedCategory,
         searchQuery,

@@ -12,8 +12,8 @@ import {
 } from '../types';
 import { PortfolioCategory } from '../data/portfolioData';
 
-// Live Render backend URL:
-const API_URL = 'https://eliezer-portifolio.onrender.com/api';
+// AUTHORITATIVE local backend URL (served by Express on port 3000):
+const API_URL = '/api';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL 

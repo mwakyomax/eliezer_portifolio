@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { SEO } from '../components/SEO';
 import { Navbar } from '../components/Navbar';
@@ -19,8 +19,12 @@ import { ContactModal } from '../components/ContactModal';
 import { Toast } from '../components/Toast';
 
 export const Home: React.FC = () => {
-  const { settings } = usePortfolio();
+  const { settings, reloadPortfolioData } = usePortfolio();
   const [contactOpen, setContactOpen] = useState(false);
+
+  useEffect(() => {
+    reloadPortfolioData();
+  }, []);
 
   const seoTitle = settings?.fullName && settings?.title
     ? `${settings.fullName} - ${settings.title}`

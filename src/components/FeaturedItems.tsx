@@ -84,14 +84,31 @@ export const FeaturedItems: React.FC = () => {
                 className="group relative bg-[#FAF8F8] rounded-3xl p-4 border border-[#F1EBEB] hover:border-[#761A30]/50 hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 {/* Image Container with Top Badges */}
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-white mb-4">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#FAF3F5] mb-4">
+                  {project.image ? (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                        const fallback = (e.currentTarget.nextElementSibling as HTMLElement);
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : null}
+                  <div 
+                    style={{ display: project.image ? 'none' : 'flex' }}
+                    className="w-full h-full bg-gradient-to-br from-[#FAF3F5] via-white to-[#F4ECEE] flex-col items-center justify-center p-4 text-center space-y-1"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-[#FAF3F5] text-[#761A30] flex items-center justify-center font-bold shadow-2xs">
+                      <Layers className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs font-black text-[#18181B] line-clamp-1">{project.title}</span>
+                    <span className="text-[10px] font-bold text-[#761A30]">{project.category}</span>
+                  </div>
 
                   {/* Top-Left Category Badge */}
                   <div className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide text-[#761A30] shadow-xs">

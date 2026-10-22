@@ -115,9 +115,8 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         {/* Public Site Button */}
         <Link
           to="/"
-          target="_blank"
-          rel="noreferrer"
           className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[#FAF3F5] text-[#52525B] hover:text-[#761A30] border border-[#E4E4E7] text-xs font-bold transition-all shadow-2xs"
+          title="Return to public portfolio site"
         >
           <span>Live Site</span>
           <ArrowUpRight className="w-3.5 h-3.5" />

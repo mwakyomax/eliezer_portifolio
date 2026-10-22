@@ -43,13 +43,18 @@ export const ProductQuickViewModal: React.FC = () => {
           className="inline-block w-full max-w-3xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-[#F1EBEB]"
         >
           {/* Header Bar */}
-          <div className="relative aspect-[16/9] w-full bg-zinc-900 overflow-hidden">
-            <img
-              src={activeProject.image}
-              alt={activeProject.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="relative aspect-[16/9] w-full bg-gradient-to-br from-[#450B19] via-[#761A30] to-zinc-900 overflow-hidden">
+            {activeProject.image ? (
+              <img
+                src={activeProject.image}
+                alt={activeProject.title}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                }}
+                className="w-full h-full object-cover"
+              />
+            ) : null}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
             
             {/* Close Button */}
             <button

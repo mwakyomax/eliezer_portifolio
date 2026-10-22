@@ -46,7 +46,16 @@ import { AdminModals } from './components/AdminModals';
 
 export const AdminDashboard: React.FC = () => {
   const { logout } = useAuth();
-  const { updateSettingsState } = usePortfolio();
+  const { 
+    updateSettingsState,
+    setProjects: setContextProjects,
+    setSkills: setContextSkills,
+    setExperiences: setContextExperiences,
+    setEducations: setContextEducations,
+    setCertifications: setContextCertifications,
+    setServices: setContextServices,
+    reloadPortfolioData
+  } = usePortfolio();
   const navigate = useNavigate();
 
   // Navigation State
@@ -143,6 +152,7 @@ export const AdminDashboard: React.FC = () => {
           ? ` (${counts.projects} projects, ${counts.skills} skills, ${counts.experience} experiences)`
           : '';
         notify(`Database successfully synchronized!${countInfo}`);
+        await reloadPortfolioData();
         await loadAllData();
       } else {
         notify(res.data.message || 'Failed to sync database', 'error');
@@ -198,14 +208,18 @@ export const AdminDashboard: React.FC = () => {
       if (isNew) {
         const res = await createProject(editingItem);
         if (res.data.success) {
-          setProjects([res.data.data, ...projects]);
+          const updated = [res.data.data, ...projects];
+          setProjects(updated);
+          setContextProjects(updated);
           notify('Project published successfully!');
         }
       } else {
         const id = editingItem._id || editingItem.id;
         const res = await updateProject(id, editingItem);
         if (res.data.success) {
-          setProjects(projects.map((p) => (p._id === id || p.id === id ? res.data.data : p)));
+          const updated = projects.map((p) => (p._id === id || p.id === id ? res.data.data : p));
+          setProjects(updated);
+          setContextProjects(updated);
           notify('Project updated successfully!');
         }
       }
@@ -220,7 +234,9 @@ export const AdminDashboard: React.FC = () => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
       try {
         await deleteProject(id);
-        setProjects(projects.filter((p) => p._id !== id && p.id !== id));
+        const updated = projects.filter((p) => p._id !== id && p.id !== id);
+        setProjects(updated);
+        setContextProjects(updated);
         notify('Project removed.');
       } catch (err: any) {
         notify('Error deleting project', 'error');
@@ -252,14 +268,18 @@ export const AdminDashboard: React.FC = () => {
       if (isNew) {
         const res = await createSkill(editingItem);
         if (res.data.success) {
-          setSkills([...skills, res.data.data]);
+          const updated = [...skills, res.data.data];
+          setSkills(updated);
+          setContextSkills(updated);
           notify('Skill added successfully!');
         }
       } else {
         const id = editingItem._id || editingItem.id;
         const res = await updateSkill(id, editingItem);
         if (res.data.success) {
-          setSkills(skills.map((s) => (s._id === id || s.id === id ? res.data.data : s)));
+          const updated = skills.map((s) => (s._id === id || s.id === id ? res.data.data : s));
+          setSkills(updated);
+          setContextSkills(updated);
           notify('Skill updated!');
         }
       }
@@ -274,7 +294,9 @@ export const AdminDashboard: React.FC = () => {
     if (window.confirm('Delete this skill?')) {
       try {
         await deleteSkill(id);
-        setSkills(skills.filter((s) => s._id !== id && s.id !== id));
+        const updated = skills.filter((s) => s._id !== id && s.id !== id);
+        setSkills(updated);
+        setContextSkills(updated);
         notify('Skill deleted.');
       } catch (err: any) {
         notify('Error deleting skill', 'error');
@@ -325,14 +347,18 @@ export const AdminDashboard: React.FC = () => {
       if (isNew) {
         const res = await createExperience(payload);
         if (res.data.success) {
-          setExperience([res.data.data, ...experience]);
+          const updated = [res.data.data, ...experience];
+          setExperience(updated);
+          setContextExperiences(updated);
           notify('Work experience added successfully!');
         }
       } else {
         const id = editingItem._id || editingItem.id;
         const res = await updateExperience(id, payload);
         if (res.data.success) {
-          setExperience(experience.map((exp) => (exp._id === id || exp.id === id ? res.data.data : exp)));
+          const updated = experience.map((exp) => (exp._id === id || exp.id === id ? res.data.data : exp));
+          setExperience(updated);
+          setContextExperiences(updated);
           notify('Experience updated!');
         }
       }
@@ -347,7 +373,9 @@ export const AdminDashboard: React.FC = () => {
     if (window.confirm('Are you sure you want to delete this experience record?')) {
       try {
         await deleteExperience(id);
-        setExperience(experience.filter((e) => e._id !== id && e.id !== id));
+        const updated = experience.filter((e) => e._id !== id && e.id !== id);
+        setExperience(updated);
+        setContextExperiences(updated);
         notify('Experience deleted.');
       } catch (err: any) {
         notify('Error deleting experience', 'error');
@@ -382,14 +410,18 @@ export const AdminDashboard: React.FC = () => {
       if (isNew) {
         const res = await createEducation(editingItem);
         if (res.data.success) {
-          setEducation([...education, res.data.data]);
+          const updated = [...education, res.data.data];
+          setEducation(updated);
+          setContextEducations(updated);
           notify('Education record added!');
         }
       } else {
         const id = editingItem._id || editingItem.id;
         const res = await updateEducation(id, editingItem);
         if (res.data.success) {
-          setEducation(education.map((edu) => (edu._id === id || edu.id === id ? res.data.data : edu)));
+          const updated = education.map((edu) => (edu._id === id || edu.id === id ? res.data.data : edu));
+          setEducation(updated);
+          setContextEducations(updated);
           notify('Education record updated!');
         }
       }
@@ -404,7 +436,9 @@ export const AdminDashboard: React.FC = () => {
     if (window.confirm('Delete this education entry?')) {
       try {
         await deleteEducation(id);
-        setEducation(education.filter((e) => e._id !== id && e.id !== id));
+        const updated = education.filter((e) => e._id !== id && e.id !== id);
+        setEducation(updated);
+        setContextEducations(updated);
         notify('Education record deleted.');
       } catch (err: any) {
         notify('Error deleting education', 'error');
@@ -438,14 +472,18 @@ export const AdminDashboard: React.FC = () => {
       if (isNew) {
         const res = await createCertification(editingItem);
         if (res.data.success) {
-          setCertifications([...certifications, res.data.data]);
+          const updated = [...certifications, res.data.data];
+          setCertifications(updated);
+          setContextCertifications(updated);
           notify('Certification added!');
         }
       } else {
         const id = editingItem._id || editingItem.id;
         const res = await updateCertification(id, editingItem);
         if (res.data.success) {
-          setCertifications(certifications.map((c) => (c._id === id || c.id === id ? res.data.data : c)));
+          const updated = certifications.map((c) => (c._id === id || c.id === id ? res.data.data : c));
+          setCertifications(updated);
+          setContextCertifications(updated);
           notify('Certification updated!');
         }
       }
@@ -460,7 +498,9 @@ export const AdminDashboard: React.FC = () => {
     if (window.confirm('Delete this certification?')) {
       try {
         await deleteCertification(id);
-        setCertifications(certifications.filter((c) => c._id !== id && c.id !== id));
+        const updated = certifications.filter((c) => c._id !== id && c.id !== id);
+        setCertifications(updated);
+        setContextCertifications(updated);
         notify('Certification deleted.');
       } catch (err: any) {
         notify('Error deleting certification', 'error');
@@ -494,14 +534,18 @@ export const AdminDashboard: React.FC = () => {
       if (isNew) {
         const res = await createService(editingItem);
         if (res.data.success) {
-          setServices([...services, res.data.data]);
+          const updated = [...services, res.data.data];
+          setServices(updated);
+          setContextServices(updated);
           notify('Service added successfully!');
         }
       } else {
         const id = editingItem._id || editingItem.id;
         const res = await updateService(id, editingItem);
         if (res.data.success) {
-          setServices(services.map((s) => (s._id === id || s.id === id ? res.data.data : s)));
+          const updated = services.map((s) => (s._id === id || s.id === id ? res.data.data : s));
+          setServices(updated);
+          setContextServices(updated);
           notify('Service updated!');
         }
       }
@@ -516,7 +560,9 @@ export const AdminDashboard: React.FC = () => {
     if (window.confirm('Delete this service?')) {
       try {
         await deleteService(id);
-        setServices(services.filter((s) => s._id !== id && s.id !== id));
+        const updated = services.filter((s) => s._id !== id && s.id !== id);
+        setServices(updated);
+        setContextServices(updated);
         notify('Service removed.');
       } catch (err: any) {
         notify('Error deleting service', 'error');

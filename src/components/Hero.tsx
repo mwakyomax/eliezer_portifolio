@@ -45,17 +45,23 @@ export const Hero: React.FC = () => {
             {/* Sub-eyebrow */}
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FAF3F5] border border-[#F4ECEE] text-[#761A30] text-xs font-bold tracking-wide">
               <span className="w-2 h-2 rounded-full bg-[#761A30] animate-ping" />
-              <span>Software Developer & Network Specialist</span>
+              <span>{settings?.title || 'Software Developer & Network Specialist'}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#18181B] tracking-tight leading-[1.12]">
-              Engineering Scalable Systems, Full-Stack Software & Networks
+              {settings?.tagline || 'Engineering Scalable Systems, Full-Stack Software & Networks'}
             </h1>
 
             {/* Descriptive Body */}
             <p className="text-base sm:text-lg text-[#52525B] leading-relaxed max-w-2xl font-normal">
-              Hi, I'm <strong className="text-[#18181B] font-bold">Elieza Mwakyoma</strong>, a software developer and network specialist with a Bachelor of Science in Computer Science from St. Joseph University in Tanzania. I build resilient full-stack web platforms, high-throughput network architectures, and offline-first Android applications tailored for real-world reliability.
+              {settings?.bio ? (
+                <span>{settings.bio}</span>
+              ) : (
+                <>
+                  Hi, I'm <strong className="text-[#18181B] font-bold">{settings?.fullName || 'Elieza Mwakyoma'}</strong>, a software developer and network specialist with a Bachelor of Science in Computer Science from St. Joseph University in Tanzania. I build resilient full-stack web platforms, high-throughput network architectures, and offline-first Android applications tailored for real-world reliability.
+                </>
+              )}
             </p>
 
             {/* Action Buttons */}
@@ -81,7 +87,7 @@ export const Hero: React.FC = () => {
             <div className="pt-6 border-t border-[#F1EBEB] grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="space-y-0.5">
                 <span className="text-xl sm:text-2xl font-black text-[#18181B] font-mono">
-                  12+
+                  {settings?.stats?.projectsCompleted ? `${settings.stats.projectsCompleted}` : '12+'}
                 </span>
                 <p className="text-xs font-semibold text-[#71717A]">
                   Shipped Systems
@@ -90,10 +96,10 @@ export const Hero: React.FC = () => {
 
               <div className="space-y-0.5">
                 <span className="text-xl sm:text-2xl font-black text-[#761A30] font-mono">
-                  B.Sc.
+                  {settings?.stats?.yearsExperience ? `${settings.stats.yearsExperience} Yrs` : '3+ Yrs'}
                 </span>
                 <p className="text-xs font-semibold text-[#71717A]">
-                  Computer Science
+                  Experience & Focus
                 </p>
               </div>
 
