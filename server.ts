@@ -19,6 +19,7 @@ import messageRoutes from "./server/routes/messageRoutes.js";
 import settingsRoutes from "./server/routes/settingsRoutes.js";
 import articleRoutes from "./server/routes/articleRoutes.js";
 import categoryRoutes from "./server/routes/categoryRoutes.js";
+import systemRoutes from "./server/routes/systemRoutes.js";
 import { errorHandler } from "./server/middleware/errorMiddleware.js";
 
 dotenv.config();
@@ -45,9 +46,52 @@ async function startServer() {
     })
   );
   app.use(cors({ origin: true, credentials: true }));
-  app.use(compression());
+  
+  // High-performance gzip/deflate compression for payloads > 1KB
+  app.use(
+    compression({
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) return false;
+        return compression.filter(req, res);
+      },
+      threshold: 1024,
+    })
+  );
+
   app.use(express.json({ limit: '25mb' }));
   app.use(express.urlencoded({ limit: '25mb', extended: true }));
+
+  // HTTP Cache-Control & ETag Optimization Middleware
+  app.use((req, res, next) => {
+    // Enable ETags for all requests
+    res.set('X-Content-Type-Options', 'nosniff');
+    res.set('X-Frame-Options', 'SAMEORIGIN');
+
+    // Static GET API caching policy: 30s cache, stale-while-revalidate 60s
+    if (req.method === 'GET') {
+      const publicCachePaths = [
+        '/api/projects',
+        '/api/skills',
+        '/api/experience',
+        '/api/education',
+        '/api/certifications',
+        '/api/services',
+        '/api/articles',
+        '/api/categories',
+        '/api/settings',
+      ];
+      const isPublicCacheable = publicCachePaths.some((p) => req.path.startsWith(p));
+      if (isPublicCacheable) {
+        res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
+      } else if (req.path.startsWith('/api/system/health') || req.path.startsWith('/api/messages') || req.path.startsWith('/api/auth')) {
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      }
+    } else {
+      // Mutations should invalidate caches
+      res.set('Cache-Control', 'no-store');
+    }
+    next();
+  });
 
   // Connect Database (with automatic graceful in-memory store fallback)
   await connectDB();
@@ -64,6 +108,7 @@ async function startServer() {
   app.use('/api/settings', settingsRoutes);
   app.use('/api/articles', articleRoutes);
   app.use('/api/categories', categoryRoutes);
+  app.use('/api/system', systemRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', service: 'Elieza Mwakyoma Portfolio API', timestamp: new Date() });

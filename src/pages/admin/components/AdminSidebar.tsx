@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   LayoutDashboard, FolderKanban, Code2, Briefcase, GraduationCap, 
   Award, Layers, Mail, Settings, LogOut, RefreshCw, Globe, 
-  ArrowUpRight, Shield, X, Sparkles, Sliders, BookOpen
+  ArrowUpRight, Shield, X, Sparkles, Sliders, BookOpen, Zap
 } from 'lucide-react';
 import { PortfolioSettings } from '../../../types';
 
@@ -87,6 +87,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           badge: unreadMessagesCount 
         },
         { id: 'settings', label: 'Profile & Settings', icon: Settings },
+        { id: 'optimization', label: 'System Optimization', icon: Zap },
       ],
     },
   ];

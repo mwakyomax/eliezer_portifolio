@@ -39,6 +39,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
       case 'certifications': return { category: 'Credentials', title: 'Certifications' };
       case 'messages': return { category: 'Communications', title: 'Inquiries Inbox' };
       case 'settings': return { category: 'System', title: 'Profile & Settings' };
+      case 'optimization': return { category: 'System', title: 'System Optimization & Health' };
       default: return { category: 'Console', title: 'Dashboard' };
     }
   };

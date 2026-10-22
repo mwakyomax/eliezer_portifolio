@@ -117,6 +117,65 @@ export const fetchSettings = () => api.get<{ success: boolean; data: PortfolioSe
 export const updateSettings = (data: Partial<PortfolioSettings>) => api.put<{ success: boolean; data: PortfolioSettings; message: string }>('/settings', data);
 export const seedDatabase = () => api.post<{ success: boolean; message: string; counts?: any }>('/settings/seed');
 
+// System Optimization & Diagnostics
+export interface SystemHealthData {
+  success: boolean;
+  status: string;
+  timestamp: string;
+  uptimeSeconds: number;
+  uptimeFormatted: string;
+  runtime: {
+    nodeVersion: string;
+    platform: string;
+    arch: string;
+    pid: number;
+    environment: string;
+  };
+  memory: {
+    rssMB: number;
+    heapTotalMB: number;
+    heapUsedMB: number;
+    externalMB: number;
+    heapUtilizationPercent: number;
+  };
+  storage: {
+    engine: string;
+    connected: boolean;
+    collectionsCount: number;
+    totalRecords: number;
+    counts: Record<string, number>;
+  };
+  optimizations: {
+    gzipCompression: boolean;
+    httpCaching: boolean;
+    codeSplitting: boolean;
+    keepAliveOptimized: boolean;
+    lazyLoading: boolean;
+  };
+}
+
+export const fetchSystemHealth = () => api.get<SystemHealthData>('/system/health');
+export const pingSystem = () => api.get<{ pong: boolean; timestamp: number }>('/system/ping');
+export const runSystemOptimization = () => api.post<{
+  success: boolean;
+  message: string;
+  durationMs: number;
+  reclaimedHeapMB: number;
+  memoryAfter: {
+    rssMB: number;
+    heapTotalMB: number;
+    heapUsedMB: number;
+    heapUtilizationPercent: number;
+  };
+  tasksPerformed: string[];
+}>('/system/optimize');
+export const warmupSystem = () => api.post<{
+  success: boolean;
+  message: string;
+  durationMs: number;
+  warmedCollections: string[];
+}>('/system/warmup');
+
 export default api;
 
 

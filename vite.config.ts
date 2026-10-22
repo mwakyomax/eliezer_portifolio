@@ -15,6 +15,18 @@ export default defineConfig(() => {
     build: {
       target: 'esnext',
       chunkSizeWarningLimit: 1500,
+      cssCodeSplit: true,
+      assetsInlineLimit: 4096,
+      minify: 'esbuild' as const,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-icons': ['lucide-react'],
+            'vendor-motion': ['motion'],
+          },
+        },
+      },
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

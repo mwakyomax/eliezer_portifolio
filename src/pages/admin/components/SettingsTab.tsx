@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   User, Image as ImageIcon, Camera, Upload, RotateCcw, 
   Trash2, Sliders, Droplets, CheckCircle, Save, Sparkles, 
-  MapPin, Phone, Mail, Github, Globe, FileText
+  MapPin, Phone, Mail, Github, Globe, FileText, Zap
 } from 'lucide-react';
 import { PortfolioSettings } from '../../../types';
 import { useLiquidNav } from '../../../context/LiquidNavContext';
@@ -18,6 +18,7 @@ interface SettingsTabProps {
   isProcessingImage: boolean;
   imageMeta: { sizeKb?: number; width?: number; height?: number; name?: string } | null;
   notify: (msg: string, type?: 'success' | 'error') => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
 export const SettingsTab: React.FC<SettingsTabProps> = ({
@@ -31,6 +32,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   isProcessingImage,
   imageMeta,
   notify,
+  onNavigateTab,
 }) => {
   const { config: liquidConfig, updateConfig: updateLiquidConfig } = useLiquidNav();
   const [activeSection, setActiveSection] = useState<'portrait' | 'bio' | 'metrics' | 'liquid'>('portrait');
@@ -96,6 +98,17 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </button>
           );
         })}
+
+        {onNavigateTab && (
+          <button
+            type="button"
+            onClick={() => onNavigateTab('optimization')}
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-2xl text-xs font-bold shrink-0 transition-all cursor-pointer bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200"
+          >
+            <Zap className="w-4 h-4 text-emerald-600" />
+            <span>System Optimization & Health →</span>
+          </button>
+        )}
       </div>
 
       {/* SECTION 1: PORTRAIT & GALLERY */}

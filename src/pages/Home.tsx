@@ -10,13 +10,15 @@ import { TechnicalStack } from '../components/TechnicalStack';
 import { BlogSection } from '../components/BlogSection';
 import { Footer } from '../components/Footer';
 
-import { CartDrawer } from '../components/CartDrawer';
-import { ProductQuickViewModal } from '../components/ProductQuickViewModal';
-import { SearchModal } from '../components/SearchModal';
-import { BlogModal } from '../components/BlogModal';
-import { SpecialOffersModal } from '../components/SpecialOffersModal';
-import { ContactModal } from '../components/ContactModal';
 import { Toast } from '../components/Toast';
+
+// Code-split heavy interactive modals & drawers for optimal initial page load performance
+const CartDrawer = React.lazy(() => import('../components/CartDrawer').then(m => ({ default: m.CartDrawer })));
+const ProductQuickViewModal = React.lazy(() => import('../components/ProductQuickViewModal').then(m => ({ default: m.ProductQuickViewModal })));
+const SearchModal = React.lazy(() => import('../components/SearchModal').then(m => ({ default: m.SearchModal })));
+const BlogModal = React.lazy(() => import('../components/BlogModal').then(m => ({ default: m.BlogModal })));
+const SpecialOffersModal = React.lazy(() => import('../components/SpecialOffersModal').then(m => ({ default: m.SpecialOffersModal })));
+const ContactModal = React.lazy(() => import('../components/ContactModal').then(m => ({ default: m.ContactModal })));
 
 export const Home: React.FC = () => {
   const { settings, reloadPortfolioData } = usePortfolio();
@@ -62,13 +64,15 @@ export const Home: React.FC = () => {
       {/* 7. Executive Burgundy Footer */}
       <Footer />
 
-      {/* Clean Interactive Drawers & Modals */}
-      <CartDrawer />
-      <ProductQuickViewModal />
-      <SearchModal />
-      <BlogModal />
-      <SpecialOffersModal />
-      <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
+      {/* Clean Interactive Drawers & Modals (Lazy Loaded) */}
+      <React.Suspense fallback={null}>
+        <CartDrawer />
+        <ProductQuickViewModal />
+        <SearchModal />
+        <BlogModal />
+        <SpecialOffersModal />
+        <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
+      </React.Suspense>
       <Toast />
     </div>
   );

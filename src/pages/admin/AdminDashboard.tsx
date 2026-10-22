@@ -45,6 +45,7 @@ import { CertificationsTab } from './components/CertificationsTab';
 import { ServicesTab } from './components/ServicesTab';
 import { MessagesTab } from './components/MessagesTab';
 import { SettingsTab } from './components/SettingsTab';
+import { SystemOptimizationTab } from './components/SystemOptimizationTab';
 import { AdminModals } from './components/AdminModals';
 
 export const AdminDashboard: React.FC = () => {
@@ -1060,7 +1061,12 @@ export const AdminDashboard: React.FC = () => {
               isProcessingImage={isProcessingImage}
               imageMeta={imageMeta}
               notify={notify}
+              onNavigateTab={setActiveTab}
             />
+          )}
+
+          {activeTab === 'optimization' && (
+            <SystemOptimizationTab notify={notify} />
           )}
         </main>
 
