@@ -31,6 +31,7 @@ interface PortfolioContextType {
   setProjects: (projects: Project[] | ((prev: Project[]) => Project[])) => void;
   categories: PortfolioCategory[];
   articles: BlogArticle[];
+  setArticles: (articles: BlogArticle[] | ((prev: BlogArticle[]) => BlogArticle[])) => void;
   skills: Skill[];
   setSkills: (skills: Skill[] | ((prev: Skill[]) => Skill[])) => void;
   experiences: Experience[];
@@ -167,13 +168,34 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return SERVICES_DATA;
   });
 
+  // Articles with persistent localStorage cache
+  const [articles, setArticlesState] = useState<BlogArticle[]>(() => {
+    try {
+      const cached = localStorage.getItem('elieza_portfolio_articles');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return BLOG_ARTICLES;
+  });
+
   const [categories, setCategories] = useState<PortfolioCategory[]>(DOMAIN_CATEGORIES);
-  const [articles, setArticles] = useState<BlogArticle[]>(BLOG_ARTICLES);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Synchronized state setters that immediately persist to localStorage
+  const setArticles = (updater: BlogArticle[] | ((prev: BlogArticle[]) => BlogArticle[])) => {
+    setArticlesState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem('elieza_portfolio_articles', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
   const setProjects = (updater: Project[] | ((prev: Project[]) => Project[])) => {
     setProjectsState((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
@@ -300,6 +322,9 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (e.key === 'elieza_portfolio_skills' && e.newValue) {
         try { setSkillsState(JSON.parse(e.newValue)); } catch {}
       }
+      if (e.key === 'elieza_portfolio_articles' && e.newValue) {
+        try { setArticlesState(JSON.parse(e.newValue)); } catch {}
+      }
       if (e.key === 'elieza_portfolio_experience' && e.newValue) {
         try { setExperiencesState(JSON.parse(e.newValue)); } catch {}
       }
@@ -400,6 +425,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setProjects,
         categories,
         articles,
+        setArticles,
         skills,
         setSkills,
         experiences,

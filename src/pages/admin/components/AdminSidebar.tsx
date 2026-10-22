@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   LayoutDashboard, FolderKanban, Code2, Briefcase, GraduationCap, 
   Award, Layers, Mail, Settings, LogOut, RefreshCw, Globe, 
-  ArrowUpRight, Shield, X, Sparkles, Sliders
+  ArrowUpRight, Shield, X, Sparkles, Sliders, BookOpen
 } from 'lucide-react';
 import { PortfolioSettings } from '../../../types';
 
@@ -25,6 +25,7 @@ interface AdminSidebarProps {
   setActiveTab: (tab: string) => void;
   closeMobileMenu?: () => void;
   projectsCount: number;
+  articlesCount?: number;
   skillsCount: number;
   experienceCount: number;
   educationCount: number;
@@ -43,6 +44,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   setActiveTab,
   closeMobileMenu,
   projectsCount,
+  articlesCount = 0,
   skillsCount,
   experienceCount,
   educationCount,
@@ -61,6 +63,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       items: [
         { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
         { id: 'projects', label: 'Projects', icon: FolderKanban, count: projectsCount },
+        { id: 'articles', label: 'Tech Journal', icon: BookOpen, count: articlesCount },
         { id: 'skills', label: 'Technical Stack', icon: Code2, count: skillsCount },
         { id: 'services', label: 'Services', icon: Layers, count: servicesCount },
       ],

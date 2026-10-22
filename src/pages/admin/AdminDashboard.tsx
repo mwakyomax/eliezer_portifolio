@@ -13,7 +13,8 @@ import {
   CERTIFICATIONS_DATA,
   SERVICES_DATA,
   PORTFOLIO_SETTINGS,
-  DEFAULT_PROFILE_IMAGE
+  DEFAULT_PROFILE_IMAGE,
+  BLOG_ARTICLES
 } from '../../data/portfolioData';
 import { 
   fetchProjects, createProject, updateProject, deleteProject,
@@ -22,12 +23,13 @@ import {
   fetchEducation, createEducation, updateEducation, deleteEducation,
   fetchCertifications, createCertification, updateCertification, deleteCertification,
   fetchServices, createService, updateService, deleteService,
+  fetchArticles, createArticle, updateArticle, deleteArticle,
   fetchMessages, toggleMessageRead, deleteMessage,
   fetchSettings, updateSettings, seedDatabase
 } from '../../services/api';
 import { 
   Project, Skill, Experience, Education, Certification, 
-  Service, Message, PortfolioSettings 
+  Service, Message, PortfolioSettings, BlogArticle 
 } from '../../types';
 
 // Admin Subcomponents
@@ -35,6 +37,7 @@ import { AdminSidebar } from './components/AdminSidebar';
 import { AdminHeader } from './components/AdminHeader';
 import { OverviewTab } from './components/OverviewTab';
 import { ProjectsTab } from './components/ProjectsTab';
+import { ArticlesTab } from './components/ArticlesTab';
 import { SkillsTab } from './components/SkillsTab';
 import { ExperienceTab } from './components/ExperienceTab';
 import { EducationTab } from './components/EducationTab';
@@ -49,6 +52,7 @@ export const AdminDashboard: React.FC = () => {
   const { 
     updateSettingsState,
     setProjects: setContextProjects,
+    setArticles: setContextArticles,
     setSkills: setContextSkills,
     setExperiences: setContextExperiences,
     setEducations: setContextEducations,
@@ -64,6 +68,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Datasets
   const [projects, setProjects] = useState<Project[]>([]);
+  const [articles, setArticles] = useState<BlogArticle[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [experience, setExperience] = useState<Experience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
@@ -80,6 +85,8 @@ export const AdminDashboard: React.FC = () => {
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const projectImageInputRef = useRef<HTMLInputElement>(null);
   const certImageInputRef = useRef<HTMLInputElement>(null);
+  const serviceImageInputRef = useRef<HTMLInputElement>(null);
+  const articleImageInputRef = useRef<HTMLInputElement>(null);
   const [imageMeta, setImageMeta] = useState<{ sizeKb?: number; width?: number; height?: number; name?: string } | null>(null);
   const [isProcessingImage, setIsProcessingImage] = useState<boolean>(false);
 
@@ -100,13 +107,14 @@ export const AdminDashboard: React.FC = () => {
   const loadAllData = async () => {
     setLoading(true);
     try {
-      const [pRes, sRes, eRes, edRes, cRes, servRes, mRes, setRes] = await Promise.all([
+      const [pRes, sRes, eRes, edRes, cRes, servRes, artRes, mRes, setRes] = await Promise.all([
         fetchProjects().catch(() => null),
         fetchSkills().catch(() => null),
         fetchExperience().catch(() => null),
         fetchEducation().catch(() => null),
         fetchCertifications().catch(() => null),
         fetchServices().catch(() => null),
+        fetchArticles().catch(() => null),
         fetchMessages().catch(() => null),
         fetchSettings().catch(() => null),
       ]);
@@ -125,6 +133,20 @@ export const AdminDashboard: React.FC = () => {
 
       const loadedServices = servRes?.data?.data && servRes.data.data.length > 0 ? servRes.data.data : SERVICES_DATA;
       setServices(loadedServices);
+
+      let loadedArticles = BLOG_ARTICLES;
+      if (artRes?.data?.data && Array.isArray(artRes.data.data) && artRes.data.data.length > 0) {
+        loadedArticles = artRes.data.data;
+      } else {
+        try {
+          const cached = localStorage.getItem('elieza_portfolio_articles');
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) loadedArticles = parsed;
+          }
+        } catch (e) {}
+      }
+      setArticles(loadedArticles);
 
       if (mRes?.data?.data) {
         setMessages(mRes.data.data);
@@ -570,6 +592,80 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  // --- ARTICLE / TECH JOURNAL HANDLERS ---
+  const handleOpenNewArticle = () => {
+    setIsNew(true);
+    setEditingItem({
+      title: '',
+      category: 'Backend Architecture',
+      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      readTime: '6 min read',
+      author: settings?.fullName || 'Elieza Mwakyoma',
+      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
+      excerpt: '',
+      content: '',
+    });
+    setModalType('article');
+  };
+
+  const handleEditArticle = (article: BlogArticle) => {
+    setIsNew(false);
+    setEditingItem({ ...article });
+    setModalType('article');
+  };
+
+  const handleSaveArticle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingItem) return;
+    try {
+      const id = editingItem.id || editingItem._id;
+      if (isNew) {
+        const res = await createArticle(editingItem).catch(() => null);
+        const newArt: BlogArticle = res?.data?.data || {
+          ...editingItem,
+          id: 'art_' + Date.now(),
+          _id: 'art_' + Date.now(),
+        };
+        const updated = [newArt, ...articles];
+        setArticles(updated);
+        setContextArticles(updated);
+        try {
+          localStorage.setItem('elieza_portfolio_articles', JSON.stringify(updated));
+        } catch (e) {}
+        notify('Technical article published successfully!');
+      } else {
+        await updateArticle(id, editingItem).catch(() => null);
+        const updated = articles.map((a) => (a.id === id || (a as any)._id === id ? { ...a, ...editingItem } : a));
+        setArticles(updated);
+        setContextArticles(updated);
+        try {
+          localStorage.setItem('elieza_portfolio_articles', JSON.stringify(updated));
+        } catch (e) {}
+        notify('Technical article details & image updated successfully!');
+      }
+      setModalType(null);
+      setEditingItem(null);
+    } catch (err: any) {
+      notify(err.response?.data?.message || err.message || 'Failed to save article', 'error');
+    }
+  };
+
+  const handleDeleteArticle = async (id: string, title: string) => {
+    if (!window.confirm(`Are you sure you want to delete "${title}"?`)) return;
+    try {
+      await deleteArticle(id).catch(() => null);
+      const updated = articles.filter((a) => a.id !== id && (a as any)._id !== id);
+      setArticles(updated);
+      setContextArticles(updated);
+      try {
+        localStorage.setItem('elieza_portfolio_articles', JSON.stringify(updated));
+      } catch (e) {}
+      notify('Article removed successfully.');
+    } catch (err: any) {
+      notify(err.response?.data?.message || err.message || 'Failed to delete article', 'error');
+    }
+  };
+
   // --- MESSAGE HANDLERS ---
   const handleToggleMessageRead = async (id: string, currentRead: boolean) => {
     try {
@@ -704,6 +800,40 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleServiceImageFile = async (file: File) => {
+    if (!file || !editingItem) return;
+    try {
+      setIsProcessingImage(true);
+      const result = await processGalleryImage(file, 1000, 0.85);
+      setEditingItem({
+        ...editingItem,
+        image: result.dataUrl
+      });
+      notify(`Service diagram / visual "${file.name}" loaded (${result.sizeKb} KB)!`);
+    } catch (err: any) {
+      notify(err.message || 'Failed to process image', 'error');
+    } finally {
+      setIsProcessingImage(false);
+    }
+  };
+
+  const handleArticleImageFile = async (file: File) => {
+    if (!file || !editingItem) return;
+    try {
+      setIsProcessingImage(true);
+      const result = await processGalleryImage(file, 1200, 0.85);
+      setEditingItem({
+        ...editingItem,
+        image: result.dataUrl
+      });
+      notify(`Article cover image "${file.name}" loaded (${result.sizeKb} KB)!`);
+    } catch (err: any) {
+      notify(err.message || 'Failed to process image', 'error');
+    } finally {
+      setIsProcessingImage(false);
+    }
+  };
+
   const handleSaveSettings = async () => {
     if (!settings) return;
     try {
@@ -768,6 +898,7 @@ export const AdminDashboard: React.FC = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           projectsCount={projects.length}
+          articlesCount={articles.length}
           skillsCount={skills.length}
           experienceCount={experience.length}
           educationCount={education.length}
@@ -797,6 +928,7 @@ export const AdminDashboard: React.FC = () => {
               setActiveTab={setActiveTab}
               closeMobileMenu={() => setMobileMenuOpen(false)}
               projectsCount={projects.length}
+              articlesCount={articles.length}
               skillsCount={skills.length}
               experienceCount={experience.length}
               educationCount={education.length}
@@ -851,6 +983,15 @@ export const AdminDashboard: React.FC = () => {
               onOpenNewProject={handleOpenNewProject}
               onEditProject={handleEditProject}
               onDeleteProject={handleDeleteProject}
+            />
+          )}
+
+          {activeTab === 'articles' && (
+            <ArticlesTab
+              articles={articles}
+              onOpenNewArticle={handleOpenNewArticle}
+              onEditArticle={handleEditArticle}
+              onDeleteArticle={handleDeleteArticle}
             />
           )}
 
@@ -944,14 +1085,19 @@ export const AdminDashboard: React.FC = () => {
         setTempFeatureInput={setTempFeatureInput}
         projectImageInputRef={projectImageInputRef}
         certImageInputRef={certImageInputRef}
+        serviceImageInputRef={serviceImageInputRef}
+        articleImageInputRef={articleImageInputRef}
         handleProjectImageFile={handleProjectImageFile}
         handleCertImageFile={handleCertImageFile}
+        handleServiceImageFile={handleServiceImageFile}
+        handleArticleImageFile={handleArticleImageFile}
         handleSaveProject={handleSaveProject}
         handleSaveSkill={handleSaveSkill}
         handleSaveExperience={handleSaveExperience}
         handleSaveEducation={handleSaveEducation}
         handleSaveCertification={handleSaveCertification}
         handleSaveService={handleSaveService}
+        handleSaveArticle={handleSaveArticle}
       />
     </div>
   );

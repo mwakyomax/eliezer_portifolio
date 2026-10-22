@@ -161,9 +161,11 @@ export interface Certification {
 
 export interface Service {
   _id?: string;
+  id?: string;
   title: string;
   description: string;
   icon?: string;
+  image?: string;
   features?: string[];
 }
 

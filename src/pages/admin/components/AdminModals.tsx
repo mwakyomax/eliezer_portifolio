@@ -15,14 +15,19 @@ interface AdminModalsProps {
   setTempFeatureInput: (val: string) => void;
   projectImageInputRef: React.RefObject<HTMLInputElement>;
   certImageInputRef: React.RefObject<HTMLInputElement>;
+  serviceImageInputRef?: React.RefObject<HTMLInputElement>;
+  articleImageInputRef?: React.RefObject<HTMLInputElement>;
   handleProjectImageFile: (file: File) => void;
   handleCertImageFile: (file: File) => void;
+  handleServiceImageFile?: (file: File) => void;
+  handleArticleImageFile?: (file: File) => void;
   handleSaveProject: (e: React.FormEvent) => void;
   handleSaveSkill: (e: React.FormEvent) => void;
   handleSaveExperience: (e: React.FormEvent) => void;
   handleSaveEducation: (e: React.FormEvent) => void;
   handleSaveCertification: (e: React.FormEvent) => void;
   handleSaveService: (e: React.FormEvent) => void;
+  handleSaveArticle?: (e: React.FormEvent) => void;
 }
 
 export const AdminModals: React.FC<AdminModalsProps> = ({
@@ -39,14 +44,19 @@ export const AdminModals: React.FC<AdminModalsProps> = ({
   setTempFeatureInput,
   projectImageInputRef,
   certImageInputRef,
+  serviceImageInputRef,
+  articleImageInputRef,
   handleProjectImageFile,
   handleCertImageFile,
+  handleServiceImageFile,
+  handleArticleImageFile,
   handleSaveProject,
   handleSaveSkill,
   handleSaveExperience,
   handleSaveEducation,
   handleSaveCertification,
   handleSaveService,
+  handleSaveArticle,
 }) => {
   if (!modalType || !editingItem) return null;
 
@@ -92,13 +102,40 @@ export const AdminModals: React.FC<AdminModalsProps> = ({
               <div className="space-y-1">
                 <label className="text-xs font-bold text-[#18181B]">Domain Category *</label>
                 <select
-                  value={editingItem.category || 'Web Development'}
+                  value={editingItem.category || 'Backend Architecture'}
                   onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
                   className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
                 >
-                  {['Web Development', 'Mobile Development', 'Network & Systems', 'Other'].map((cat) => (
+                  {[
+                    'Backend Architecture',
+                    'Algorithms & Architecture',
+                    'Mobile Engineering',
+                    'Web Development',
+                    'Mobile Development',
+                    'Network & Systems',
+                    'Database',
+                    'Algorithms',
+                    'DevOps',
+                    'UI/UX',
+                    'Other'
+                  ].map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
+                  {editingItem.category && ![
+                    'Backend Architecture',
+                    'Algorithms & Architecture',
+                    'Mobile Engineering',
+                    'Web Development',
+                    'Mobile Development',
+                    'Network & Systems',
+                    'Database',
+                    'Algorithms',
+                    'DevOps',
+                    'UI/UX',
+                    'Other'
+                  ].includes(editingItem.category) && (
+                    <option value={editingItem.category}>{editingItem.category}</option>
+                  )}
                 </select>
               </div>
             </div>
@@ -694,17 +731,6 @@ export const AdminModals: React.FC<AdminModalsProps> = ({
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#18181B]">Credential Verification URL</label>
-              <input
-                type="text"
-                value={editingItem.credentialUrl || ''}
-                onChange={(e) => setEditingItem({ ...editingItem, credentialUrl: e.target.value })}
-                placeholder="https://www.credly.com/..."
-                className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
-              />
-            </div>
-
-            <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-[#18181B]">Certificate Badge / Seal Image (Optional)</label>
                 <button
@@ -790,6 +816,52 @@ export const AdminModals: React.FC<AdminModalsProps> = ({
               />
             </div>
 
+            {/* Service Visual / Architecture Diagram */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#18181B]">Architecture Diagram / Visual (Optional)</label>
+                {serviceImageInputRef && (
+                  <button
+                    type="button"
+                    onClick={() => serviceImageInputRef.current?.click()}
+                    className="text-[11px] font-bold text-[#761A30] hover:underline inline-flex items-center space-x-1 cursor-pointer"
+                  >
+                    <Upload className="w-3 h-3" />
+                    <span>Upload File</span>
+                  </button>
+                )}
+              </div>
+              {serviceImageInputRef && (
+                <input
+                  type="file"
+                  ref={serviceImageInputRef}
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0] && handleServiceImageFile) {
+                      handleServiceImageFile(e.target.files[0]);
+                    }
+                  }}
+                />
+              )}
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={editingItem.image || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, image: e.target.value })}
+                  placeholder="https://... or upload architecture diagram"
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                />
+                {editingItem.image && (
+                  <img
+                    src={editingItem.image}
+                    alt="Diagram Preview"
+                    className="w-10 h-10 rounded-xl object-cover border border-black/10 shrink-0"
+                  />
+                )}
+              </div>
+            </div>
+
             {/* Service Features Tag Editor */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-[#18181B]">Key Deliverables / Features</label>
@@ -851,6 +923,188 @@ export const AdminModals: React.FC<AdminModalsProps> = ({
               </button>
               <button type="submit" className="px-6 py-2.5 rounded-full bg-[#761A30] text-white text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer">
                 Save Service
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* 7. ARTICLE / TECHNICAL CASE STUDY MODAL */}
+      {modalType === 'article' && (
+        <div className="bg-white w-full max-w-2xl rounded-3xl border border-[#F1EBEB] shadow-2xl p-6 sm:p-8 space-y-6 animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+          <div className="flex items-center justify-between border-b border-[#F1EBEB] pb-3">
+            <div>
+              <h3 className="font-bold text-base text-[#18181B]">
+                {isNew ? 'Publish Technical Article & Case Study' : 'Edit Technical Article Details & Image'}
+              </h3>
+              <p className="text-[11px] text-[#71717A]">
+                Publish architectural analyses and algorithmic breakdowns in Backend, Algorithms & Mobile engineering.
+              </p>
+            </div>
+            <button onClick={closeModal} className="cursor-pointer p-1 rounded-lg hover:bg-[#FAF3F5]">
+              <X className="w-4 h-4 text-[#71717A]" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSaveArticle} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-2 space-y-1">
+                <label className="text-xs font-bold text-[#18181B]">Article Title *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.title || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
+                  placeholder="e.g. Architecting Scalable Microservices with Node.js & Redis"
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-[#18181B]">Technical Category *</label>
+                <select
+                  value={editingItem.category || 'Backend Architecture'}
+                  onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                >
+                  {[
+                    'Backend Architecture',
+                    'Algorithms & Architecture',
+                    'Mobile Engineering',
+                    'Full-Stack Web',
+                    'Cloud & DevOps',
+                    'Networking & Systems',
+                    'Other'
+                  ].map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                  {editingItem.category && ![
+                    'Backend Architecture',
+                    'Algorithms & Architecture',
+                    'Mobile Engineering',
+                    'Full-Stack Web',
+                    'Cloud & DevOps',
+                    'Networking & Systems',
+                    'Other'
+                  ].includes(editingItem.category) && (
+                    <option value={editingItem.category}>{editingItem.category}</option>
+                  )}
+                </select>
+              </div>
+            </div>
+
+            {/* Image upload & preview */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#18181B]">Cover Image / Architecture Diagram *</label>
+                {articleImageInputRef && (
+                  <button
+                    type="button"
+                    onClick={() => articleImageInputRef.current?.click()}
+                    className="text-[11px] font-bold text-[#761A30] hover:underline inline-flex items-center space-x-1 cursor-pointer"
+                  >
+                    <Upload className="w-3 h-3" />
+                    <span>Upload Image</span>
+                  </button>
+                )}
+              </div>
+              {articleImageInputRef && (
+                <input
+                  type="file"
+                  ref={articleImageInputRef}
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0] && handleArticleImageFile) {
+                      handleArticleImageFile(e.target.files[0]);
+                    }
+                  }}
+                />
+              )}
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  required
+                  value={editingItem.image || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, image: e.target.value })}
+                  placeholder="https://... or click Upload Image"
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                />
+                {editingItem.image && (
+                  <img
+                    src={editingItem.image}
+                    alt="Article Cover"
+                    className="w-12 h-10 rounded-xl object-cover border border-black/10 shrink-0"
+                  />
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-[#18181B]">Publication Date</label>
+                <input
+                  type="text"
+                  value={editingItem.date || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, date: e.target.value })}
+                  placeholder="e.g. February 20, 2026"
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-[#18181B]">Reading Duration</label>
+                <input
+                  type="text"
+                  value={editingItem.readTime || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, readTime: e.target.value })}
+                  placeholder="e.g. 6 min read"
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-[#18181B]">Author</label>
+                <input
+                  type="text"
+                  value={editingItem.author || 'Elieza Mwakyoma'}
+                  onChange={(e) => setEditingItem({ ...editingItem, author: e.target.value })}
+                  placeholder="Elieza Mwakyoma"
+                  className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-[#18181B]">Excerpt / Abstract *</label>
+              <textarea
+                rows={2}
+                required
+                value={editingItem.excerpt || ''}
+                onChange={(e) => setEditingItem({ ...editingItem, excerpt: e.target.value })}
+                placeholder="Short summary highlighting the core problem, solution, and key metrics..."
+                className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30]"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-[#18181B]">Full Technical Content / Case Study *</label>
+              <textarea
+                rows={6}
+                required
+                value={editingItem.content || ''}
+                onChange={(e) => setEditingItem({ ...editingItem, content: e.target.value })}
+                placeholder="Deep dive explanation, architecture diagrams breakdown, algorithm complexities, benchmarks, and outcomes..."
+                className="w-full p-3 rounded-2xl bg-[#FAFAFA] border border-[#E4E4E7] text-xs focus:outline-none focus:border-[#761A30] font-mono"
+              />
+            </div>
+
+            <div className="pt-3 border-t border-[#F1EBEB] flex justify-end space-x-2">
+              <button type="button" onClick={closeModal} className="px-4 py-2 text-xs font-bold text-[#71717A] cursor-pointer">
+                Cancel
+              </button>
+              <button type="submit" className="px-6 py-2.5 rounded-full bg-[#761A30] text-white text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer">
+                Save Article
               </button>
             </div>
           </form>

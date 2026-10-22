@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Plus, Edit, Trash2, ExternalLink, Calendar, CheckCircle2 } from 'lucide-react';
+import { Award, Plus, Edit, Trash2, Calendar } from 'lucide-react';
 import { Certification } from '../../../types';
 
 interface CertificationsTabProps {
@@ -25,11 +25,11 @@ export const CertificationsTab: React.FC<CertificationsTabProps> = ({
               Certifications & Credentials
             </h2>
             <span className="px-2.5 py-0.5 rounded-full bg-[#FAF3F5] text-[#761A30] font-black text-xs border border-[#F4ECEE]">
-              {certifications.length} Verified
+              {certifications.length} Certificates
             </span>
           </div>
           <p className="text-xs text-[#71717A] mt-1">
-            Display your industry credentials (Cisco, AWS, Google, Oracle) with verification links and seal badges.
+            Display your industry qualifications (Cisco, AWS, Google, Oracle) with issuer details and badges.
           </p>
         </div>
 
@@ -111,18 +111,6 @@ export const CertificationsTab: React.FC<CertificationsTabProps> = ({
                   <span className="text-[#71717A] text-[11px]">
                     Issued: {cert.issueDate}
                   </span>
-
-                  {cert.credentialUrl && (
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center space-x-1 text-[#761A30] font-bold text-xs hover:underline"
-                    >
-                      <span>Verify</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
                 </div>
               </div>
             );

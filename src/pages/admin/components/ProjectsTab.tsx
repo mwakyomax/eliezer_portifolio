@@ -22,10 +22,26 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
-  const categories = ['All', 'Web Development', 'Mobile Development', 'Network & Systems', 'Other'];
+  const categories = [
+    'All',
+    'Backend Architecture',
+    'Algorithms & Architecture',
+    'Mobile Engineering',
+    'Web Development',
+    'Mobile Development',
+    'Network & Systems',
+    'Other'
+  ];
 
   const filteredProjects = projects.filter((p) => {
-    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+    const cat = (p.category || '').toLowerCase();
+    const sel = selectedCategory.toLowerCase();
+    const matchesCategory = selectedCategory === 'All' || 
+      p.category === selectedCategory ||
+      cat === sel ||
+      (sel === 'backend architecture' && (cat.includes('backend') || cat.includes('database') || cat.includes('server'))) ||
+      (sel === 'algorithms & architecture' && (cat.includes('algorithm') || cat.includes('architecture'))) ||
+      (sel === 'mobile engineering' && (cat.includes('mobile') || cat.includes('android')));
     const matchesSearch = searchQuery === '' || 
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

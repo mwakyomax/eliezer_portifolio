@@ -9,8 +9,7 @@ import {
   GraduationCap, 
   Briefcase, 
   Award, 
-  CheckCircle2, 
-  ExternalLink 
+  CheckCircle2 
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
@@ -253,18 +252,6 @@ export const TechnicalStack: React.FC = () => {
                   <h4 className="text-sm font-black text-[#18181B] leading-snug">{cert.name}</h4>
                   <p className="text-xs text-[#71717A]">{cert.issuer} • Issued {cert.issueDate}</p>
                 </div>
-
-                {cert.credentialUrl && (
-                  <a
-                    href={cert.credentialUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#761A30] hover:text-[#5E1426] pt-2 border-t border-[#F4ECEE]"
-                  >
-                    <span>Verify Credential</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
               </div>
             ))}
           </div>

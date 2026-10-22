@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ExternalLink, Calendar, ShieldCheck } from 'lucide-react';
+import { Calendar, ShieldCheck } from 'lucide-react';
 import { Certification } from '../types';
 
 interface CertificationsProps {
@@ -16,7 +16,7 @@ export const Certifications: React.FC<CertificationsProps> = ({ certifications, 
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-blue-400 font-mono text-xs tracking-widest uppercase font-semibold">
-            Verified Credentials
+            Industry Credentials
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Professional Certifications
@@ -62,18 +62,6 @@ export const Certifications: React.FC<CertificationsProps> = ({ certifications, 
                     <Calendar className="w-3.5 h-3.5 text-blue-400" />
                     <span>Issued {cert.issueDate}</span>
                   </span>
-
-                  {cert.credentialUrl && (
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:text-white flex items-center space-x-1 font-sans font-semibold transition-colors"
-                    >
-                      <span>Verify</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  )}
                 </div>
               </motion.div>
             ))}

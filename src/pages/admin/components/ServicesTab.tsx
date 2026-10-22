@@ -89,6 +89,16 @@ export const ServicesTab: React.FC<ServicesTabProps> = ({
                     </div>
                   </div>
 
+                  {service.image && (
+                    <div className="rounded-2xl overflow-hidden aspect-[16/9] bg-zinc-100 border border-[#F1EBEB]">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+
                   <div>
                     <h3 className="font-serif font-black text-lg text-[#18181B]">
                       {service.title}

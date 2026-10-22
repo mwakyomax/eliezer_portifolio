@@ -26,12 +26,32 @@ export const FeaturedItems: React.FC = () => {
 
   const [visibleCount, setVisibleCount] = useState<number>(8);
 
-  const categories = ['All', 'Web Development', 'Mobile', 'Networking', 'Algorithms', 'Database', 'DevOps', 'UI/UX'];
+  const categories = [
+    'All',
+    'Backend Architecture',
+    'Algorithms & Architecture',
+    'Mobile Engineering',
+    'Web Development',
+    'Mobile',
+    'Networking',
+    'Algorithms',
+    'Database',
+    'DevOps',
+    'UI/UX'
+  ];
 
   // Filter projects by active category
   const filteredProjects = selectedCategory === 'All'
     ? projects
-    : projects.filter((p) => p.category.toLowerCase().includes(selectedCategory.toLowerCase()));
+    : projects.filter((p) => {
+        const cat = (p.category || '').toLowerCase();
+        const sel = selectedCategory.toLowerCase();
+        if (cat === sel || cat.includes(sel) || sel.includes(cat)) return true;
+        if (sel === 'backend architecture' && (cat.includes('backend') || cat.includes('database') || cat.includes('server'))) return true;
+        if (sel === 'algorithms & architecture' && (cat.includes('algorithm') || cat.includes('architecture'))) return true;
+        if (sel === 'mobile engineering' && (cat.includes('mobile') || cat.includes('android'))) return true;
+        return false;
+      });
 
   const displayedProjects = filteredProjects.slice(0, visibleCount);
 

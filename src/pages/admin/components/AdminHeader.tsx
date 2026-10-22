@@ -31,6 +31,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
     switch (tab) {
       case 'dashboard': return { category: 'Console', title: 'Executive Overview' };
       case 'projects': return { category: 'Workspace', title: 'Projects Management' };
+      case 'articles': return { category: 'Workspace', title: 'Tech Journal & Case Studies' };
       case 'skills': return { category: 'Workspace', title: 'Technical Stack' };
       case 'services': return { category: 'Workspace', title: 'Services & Solutions' };
       case 'experience': return { category: 'Career', title: 'Work Experience' };

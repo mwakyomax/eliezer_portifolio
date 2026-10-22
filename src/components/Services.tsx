@@ -58,9 +58,21 @@ export const Services: React.FC<ServicesProps> = ({ services, loading }) => {
                   className="p-8 rounded-3xl bg-[#0f172a] border border-white/5 hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-900/20 transition-all flex flex-col justify-between space-y-4 group"
                 >
                   <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <Icon className="w-6 h-6" />
+                    <div className="flex items-center justify-between">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <Icon className="w-6 h-6" />
+                      </div>
                     </div>
+
+                    {service.image && (
+                      <div className="rounded-2xl overflow-hidden aspect-[16/9] bg-slate-900 border border-white/10">
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
 
                     <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
                       {service.title}
