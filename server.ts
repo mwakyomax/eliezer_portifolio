@@ -65,9 +65,8 @@ async function startServer() {
 
   // HTTP Cache-Control & ETag Optimization Middleware
   app.use((req, res, next) => {
-    // Enable ETags for all requests
+    // Enable ETags and standard headers without blocking AI Studio iframe preview
     res.set('X-Content-Type-Options', 'nosniff');
-    res.set('X-Frame-Options', 'SAMEORIGIN');
 
     // Static GET API caching policy: 30s cache, stale-while-revalidate 60s
     if (req.method === 'GET') {

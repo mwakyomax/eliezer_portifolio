@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2 } from 'lucide-react';
-import { useShop } from '../context/ShopContext';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Toast: React.FC = () => {
-  const { toastMessage } = useShop();
+  const { toastMessage } = usePortfolio();
 
   return (
     <AnimatePresence>

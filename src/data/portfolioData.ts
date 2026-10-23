@@ -1,5 +1,6 @@
-import { DEFAULT_PROFILE_IMAGE, DEFAULT_MARKET_IMAGE, DEFAULT_HOSPITAL_IMAGE } from '../../server/data/store';
-export { DEFAULT_PROFILE_IMAGE, DEFAULT_MARKET_IMAGE, DEFAULT_HOSPITAL_IMAGE };
+export const DEFAULT_PROFILE_IMAGE = '';
+export const DEFAULT_MARKET_IMAGE = '/images/project_market_1786536018642.jpg';
+export const DEFAULT_HOSPITAL_IMAGE = '/images/project_hospital_1786536031716.jpg';
 import { Project, Skill, Experience, Education, Certification, Service, BlogArticle } from '../types';
 
 export interface PortfolioCategory {
