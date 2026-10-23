@@ -20,7 +20,9 @@ import settingsRoutes from "./server/routes/settingsRoutes.js";
 import articleRoutes from "./server/routes/articleRoutes.js";
 import categoryRoutes from "./server/routes/categoryRoutes.js";
 import systemRoutes from "./server/routes/systemRoutes.js";
+import fs from "fs";
 import { errorHandler } from "./server/middleware/errorMiddleware.js";
+import uploadRoutes from "./server/routes/uploadRoutes.js";
 
 dotenv.config();
 
@@ -109,10 +111,20 @@ async function startServer() {
   app.use('/api/articles', articleRoutes);
   app.use('/api/categories', categoryRoutes);
   app.use('/api/system', systemRoutes);
+  app.use('/api/upload', uploadRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', service: 'Elieza Mwakyoma Portfolio API', timestamp: new Date() });
   });
+
+  // Dedicated uploads directory for persistent static images
+  const uploadsPath = path.join(process.cwd(), 'public', 'uploads');
+  if (!fs.existsSync(uploadsPath)) {
+    try {
+      fs.mkdirSync(uploadsPath, { recursive: true });
+    } catch {}
+  }
+  app.use('/uploads', express.static(uploadsPath, { maxAge: '30d' }));
 
   // Static public assets (robots.txt, sitemap.xml, site.webmanifest, etc.)
   const publicPath = path.join(process.cwd(), 'public');

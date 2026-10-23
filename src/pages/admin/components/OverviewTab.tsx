@@ -45,54 +45,25 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Executive Welcome Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#761A30] via-[#5E1426] to-[#3B0A16] text-white p-6 sm:p-8 shadow-lg">
-        {/* Subtle decorative glow */}
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-72 h-72 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 -mb-10 w-48 h-48 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
+      {/* Compact Page Heading & Primary Action */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-1">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-serif font-black text-[#18181B] tracking-tight">
+            Overview
+          </h1>
+          <p className="text-xs sm:text-sm text-[#71717A] mt-0.5">
+            Manage your engineering projects, network architectures, credentials, and client inquiries.
+          </p>
+        </div>
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-xs border border-white/15 text-[11px] font-bold text-white/90">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>Executive Control Center</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-white">
-              Welcome, {settings?.fullName || 'Elieza Mwakyoma'}
-            </h2>
-            <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
-              Your portfolio is active and fully synchronized. Manage your project case studies, 
-              network architectures, credentials, and respond to professional client inquiries.
-            </p>
-          </div>
-
-          {/* Action Hub in Hero */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-            <button
-              onClick={onOpenNewProject}
-              className="px-4 py-2.5 rounded-full bg-white text-[#761A30] hover:bg-white/90 text-xs font-black uppercase tracking-wider transition-all shadow-md flex items-center space-x-1.5 cursor-pointer shrink-0"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Publish Project</span>
-            </button>
-            <button
-              onClick={onOpenNewExperience}
-              className="px-4 py-2.5 rounded-full bg-white/15 hover:bg-white/20 text-white border border-white/20 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shrink-0"
-            >
-              <Briefcase className="w-3.5 h-3.5" />
-              <span>Add Role</span>
-            </button>
-            <button
-              onClick={() => onNavigateTab('messages')}
-              className="relative px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shrink-0"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              <span>Inbox</span>
-              {unreadMessages.length > 0 && (
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-              )}
-            </button>
-          </div>
+        <div>
+          <button
+            onClick={onOpenNewProject}
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#761A30] hover:bg-[#5E1426] text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Project</span>
+          </button>
         </div>
       </div>
 

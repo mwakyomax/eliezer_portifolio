@@ -1,4 +1,6 @@
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 
 // Pre-generated images
 export const DEFAULT_PROFILE_IMAGE = '';
@@ -541,3 +543,56 @@ In developing the MwakyomaX Android utility application, we adhered to three cor
     }
   ]
 };
+
+const PERSISTENT_STORE_FILE = path.join(process.cwd(), 'server', 'data', 'persistent_store.json');
+
+export function saveStoreToDisk() {
+  try {
+    const dataToSave = {
+      projects: memoryStore.projects,
+      skills: memoryStore.skills,
+      experience: memoryStore.experience,
+      education: memoryStore.education,
+      certifications: memoryStore.certifications,
+      services: memoryStore.services,
+      categories: memoryStore.categories,
+      articles: memoryStore.articles,
+      messages: memoryStore.messages,
+      settings: memoryStore.settings,
+    };
+    fs.writeFileSync(PERSISTENT_STORE_FILE, JSON.stringify(dataToSave, null, 2), 'utf-8');
+    console.log('[Store] Changes successfully saved to persistent disk store.');
+  } catch (err) {
+    console.warn('[Store] Failed to write persistent store to disk:', err);
+  }
+}
+
+export function loadStoreFromDisk() {
+  try {
+    if (fs.existsSync(PERSISTENT_STORE_FILE)) {
+      const content = fs.readFileSync(PERSISTENT_STORE_FILE, 'utf-8');
+      const loaded = JSON.parse(content);
+      if (loaded) {
+        if (Array.isArray(loaded.projects) && loaded.projects.length > 0) memoryStore.projects = loaded.projects;
+        if (Array.isArray(loaded.skills) && loaded.skills.length > 0) memoryStore.skills = loaded.skills;
+        if (Array.isArray(loaded.experience) && loaded.experience.length > 0) memoryStore.experience = loaded.experience;
+        if (Array.isArray(loaded.education) && loaded.education.length > 0) memoryStore.education = loaded.education;
+        if (Array.isArray(loaded.certifications) && loaded.certifications.length > 0) memoryStore.certifications = loaded.certifications;
+        if (Array.isArray(loaded.services) && loaded.services.length > 0) memoryStore.services = loaded.services;
+        if (Array.isArray(loaded.categories) && loaded.categories.length > 0) memoryStore.categories = loaded.categories;
+        if (Array.isArray(loaded.articles) && loaded.articles.length > 0) memoryStore.articles = loaded.articles;
+        if (Array.isArray(loaded.messages)) memoryStore.messages = loaded.messages;
+        if (loaded.settings && typeof loaded.settings === 'object') {
+          memoryStore.settings = { ...memoryStore.settings, ...loaded.settings };
+        }
+        console.log('[Store] Persistent data successfully restored from disk store.');
+      }
+    }
+  } catch (err) {
+    console.warn('[Store] Failed to load persistent store from disk:', err);
+  }
+}
+
+// Hydrate store immediately on module load
+loadStoreFromDisk();
+

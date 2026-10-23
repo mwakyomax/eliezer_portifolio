@@ -153,9 +153,16 @@ export const AdminDashboard: React.FC = () => {
         setMessages(mRes.data.data);
       }
       if (setRes?.data?.data) {
-        setSettings(setRes.data.data);
+        setSettings((prev: any) => {
+          const incoming = setRes.data.data;
+          const serverImg = incoming.profileImage;
+          const profileImage = (serverImg && serverImg.trim().length > 0)
+            ? serverImg
+            : (prev?.profileImage || '');
+          return { ...prev, ...incoming, profileImage };
+        });
       } else {
-        setSettings(PORTFOLIO_SETTINGS as any);
+        setSettings((prev: any) => prev || (PORTFOLIO_SETTINGS as any));
       }
     } catch (err) {
       console.error('Error loading admin datasets:', err);

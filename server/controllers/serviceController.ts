@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Service from '../models/Service.js';
-import { memoryStore } from '../data/store.js';
+import { memoryStore, saveStoreToDisk } from '../data/store.js';
+import { saveBase64Image } from '../utils/fileStorage.js';
 
 export const getServices = async (req: Request, res: Response) => {
   try {
@@ -17,12 +18,18 @@ export const getServices = async (req: Request, res: Response) => {
 
 export const createService = async (req: Request, res: Response) => {
   try {
+    const servData = { ...req.body };
+    if (servData.image && typeof servData.image === 'string') {
+      servData.image = saveBase64Image(servData.image, 'service');
+    }
+
     if (mongoose.connection.readyState === 1) {
-      const created = await Service.create(req.body);
+      const created = await Service.create(servData);
       return res.status(201).json({ success: true, data: created, message: 'Service created' });
     }
-    const newServ = { _id: 'serv_' + Date.now(), ...req.body };
+    const newServ = { _id: 'serv_' + Date.now(), ...servData };
     memoryStore.services.push(newServ);
+    saveStoreToDisk();
     return res.status(201).json({ success: true, data: newServ, message: 'Service created' });
   } catch (error: any) {
     return res.status(400).json({ success: false, message: error.message });
@@ -32,15 +39,21 @@ export const createService = async (req: Request, res: Response) => {
 export const updateService = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const servData = { ...req.body };
+    if (servData.image && typeof servData.image === 'string') {
+      servData.image = saveBase64Image(servData.image, 'service');
+    }
+
     if (mongoose.connection.readyState === 1) {
       if (mongoose.isValidObjectId(id)) {
-        const updated = await Service.findByIdAndUpdate(id, req.body, { new: true });
+        const updated = await Service.findByIdAndUpdate(id, servData, { new: true });
         if (updated) return res.json({ success: true, data: updated, message: 'Service updated' });
       }
     }
     const idx = memoryStore.services.findIndex(s => s._id === id || s.id === id);
     if (idx !== -1) {
-      memoryStore.services[idx] = { ...memoryStore.services[idx], ...req.body };
+      memoryStore.services[idx] = { ...memoryStore.services[idx], ...servData };
+      saveStoreToDisk();
       return res.json({ success: true, data: memoryStore.services[idx], message: 'Service updated' });
     }
     return res.status(404).json({ success: false, message: 'Service not found' });
@@ -58,6 +71,7 @@ export const deleteService = async (req: Request, res: Response) => {
       }
     }
     memoryStore.services = memoryStore.services.filter(s => s._id !== id && s.id !== id);
+    saveStoreToDisk();
     return res.json({ success: true, message: 'Service deleted' });
   } catch (error: any) {
     return res.status(500).json({ success: false, message: error.message });

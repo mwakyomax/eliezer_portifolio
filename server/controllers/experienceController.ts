@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Experience from '../models/Experience.js';
-import { memoryStore } from '../data/store.js';
+import { memoryStore, saveStoreToDisk } from '../data/store.js';
 
 export const getExperience = async (req: Request, res: Response) => {
   try {
@@ -23,6 +23,7 @@ export const createExperience = async (req: Request, res: Response) => {
     }
     const newExp = { _id: 'exp_' + Date.now(), ...req.body };
     memoryStore.experience.unshift(newExp);
+    saveStoreToDisk();
     return res.status(201).json({ success: true, data: newExp, message: 'Experience created' });
   } catch (error: any) {
     return res.status(400).json({ success: false, message: error.message });
@@ -41,6 +42,7 @@ export const updateExperience = async (req: Request, res: Response) => {
     const idx = memoryStore.experience.findIndex(e => e._id === id || e.id === id);
     if (idx !== -1) {
       memoryStore.experience[idx] = { ...memoryStore.experience[idx], ...req.body };
+      saveStoreToDisk();
       return res.json({ success: true, data: memoryStore.experience[idx], message: 'Experience updated' });
     }
     return res.status(404).json({ success: false, message: 'Experience not found' });
@@ -58,6 +60,7 @@ export const deleteExperience = async (req: Request, res: Response) => {
       }
     }
     memoryStore.experience = memoryStore.experience.filter(e => e._id !== id && e.id !== id);
+    saveStoreToDisk();
     return res.json({ success: true, message: 'Experience deleted' });
   } catch (error: any) {
     return res.status(500).json({ success: false, message: error.message });

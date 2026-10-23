@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Skill from '../models/Skill.js';
-import { memoryStore } from '../data/store.js';
+import { memoryStore, saveStoreToDisk } from '../data/store.js';
 
 export const getSkills = async (req: Request, res: Response) => {
   try {
@@ -23,6 +23,7 @@ export const createSkill = async (req: Request, res: Response) => {
     }
     const newSkill = { _id: 'skill_' + Date.now(), ...req.body };
     memoryStore.skills.push(newSkill);
+    saveStoreToDisk();
     return res.status(201).json({ success: true, data: newSkill, message: 'Skill created' });
   } catch (error: any) {
     return res.status(400).json({ success: false, message: error.message });
@@ -41,6 +42,7 @@ export const updateSkill = async (req: Request, res: Response) => {
     const idx = memoryStore.skills.findIndex(s => s._id === id || s.id === id);
     if (idx !== -1) {
       memoryStore.skills[idx] = { ...memoryStore.skills[idx], ...req.body };
+      saveStoreToDisk();
       return res.json({ success: true, data: memoryStore.skills[idx], message: 'Skill updated' });
     }
     return res.status(404).json({ success: false, message: 'Skill not found' });
@@ -58,6 +60,7 @@ export const deleteSkill = async (req: Request, res: Response) => {
       }
     }
     memoryStore.skills = memoryStore.skills.filter(s => s._id !== id && s.id !== id);
+    saveStoreToDisk();
     return res.json({ success: true, message: 'Skill deleted' });
   } catch (error: any) {
     return res.status(500).json({ success: false, message: error.message });

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Education from '../models/Education.js';
-import { memoryStore } from '../data/store.js';
+import { memoryStore, saveStoreToDisk } from '../data/store.js';
 
 export const getEducation = async (req: Request, res: Response) => {
   try {
@@ -23,6 +23,7 @@ export const createEducation = async (req: Request, res: Response) => {
     }
     const newEdu = { _id: 'edu_' + Date.now(), ...req.body };
     memoryStore.education.unshift(newEdu);
+    saveStoreToDisk();
     return res.status(201).json({ success: true, data: newEdu, message: 'Education created' });
   } catch (error: any) {
     return res.status(400).json({ success: false, message: error.message });
@@ -41,6 +42,7 @@ export const updateEducation = async (req: Request, res: Response) => {
     const idx = memoryStore.education.findIndex(e => e._id === id || e.id === id);
     if (idx !== -1) {
       memoryStore.education[idx] = { ...memoryStore.education[idx], ...req.body };
+      saveStoreToDisk();
       return res.json({ success: true, data: memoryStore.education[idx], message: 'Education updated' });
     }
     return res.status(404).json({ success: false, message: 'Education record not found' });
@@ -58,6 +60,7 @@ export const deleteEducation = async (req: Request, res: Response) => {
       }
     }
     memoryStore.education = memoryStore.education.filter(e => e._id !== id && e.id !== id);
+    saveStoreToDisk();
     return res.json({ success: true, message: 'Education record deleted' });
   } catch (error: any) {
     return res.status(500).json({ success: false, message: error.message });

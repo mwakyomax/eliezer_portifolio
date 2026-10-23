@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Message from '../models/Message.js';
-import { memoryStore } from '../data/store.js';
+import { memoryStore, saveStoreToDisk } from '../data/store.js';
 
 export const createMessage = async (req: Request, res: Response) => {
   try {
@@ -31,6 +31,7 @@ export const createMessage = async (req: Request, res: Response) => {
 
     const newMsg = { _id: 'msg_' + Date.now(), ...newMessageData };
     memoryStore.messages.unshift(newMsg);
+    saveStoreToDisk();
 
     return res.status(201).json({ 
       success: true, 
@@ -69,6 +70,7 @@ export const toggleReadStatus = async (req: Request, res: Response) => {
     const idx = memoryStore.messages.findIndex(m => m._id === id || m.id === id);
     if (idx !== -1) {
       memoryStore.messages[idx].isRead = typeof isRead === 'boolean' ? isRead : !memoryStore.messages[idx].isRead;
+      saveStoreToDisk();
       return res.json({ success: true, data: memoryStore.messages[idx], message: 'Message status updated' });
     }
 
@@ -87,6 +89,7 @@ export const deleteMessage = async (req: Request, res: Response) => {
       }
     }
     memoryStore.messages = memoryStore.messages.filter(m => m._id !== id && m.id !== id);
+    saveStoreToDisk();
     return res.json({ success: true, message: 'Message deleted' });
   } catch (error: any) {
     return res.status(500).json({ success: false, message: error.message });

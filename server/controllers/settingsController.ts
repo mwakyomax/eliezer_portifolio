@@ -10,7 +10,8 @@ import Service from '../models/Service.js';
 import Message from '../models/Message.js';
 import Article from '../models/Article.js';
 import Category from '../models/Category.js';
-import { memoryStore } from '../data/store.js';
+import { memoryStore, saveStoreToDisk } from '../data/store.js';
+import { saveBase64Image } from '../utils/fileStorage.js';
 
 export const getSettings = async (req: Request, res: Response) => {
   try {
@@ -36,6 +37,11 @@ export const updateSettings = async (req: Request, res: Response) => {
     delete updateData.createdAt;
     delete updateData.updatedAt;
 
+    // Convert any base64 profile image to a permanent disk file
+    if (updateData.profileImage && typeof updateData.profileImage === 'string') {
+      updateData.profileImage = saveBase64Image(updateData.profileImage, 'profile');
+    }
+
     if (mongoose.connection.readyState === 1) {
       let settings = await PortfolioSettings.findOne();
       if (settings) {
@@ -44,6 +50,13 @@ export const updateSettings = async (req: Request, res: Response) => {
       } else {
         settings = await PortfolioSettings.create({ ...updateData, updatedAt: new Date() });
       }
+      // Also update memoryStore and persistent disk backup
+      memoryStore.settings = {
+        ...memoryStore.settings,
+        ...updateData,
+        updatedAt: new Date()
+      };
+      saveStoreToDisk();
       return res.json({ success: true, data: settings, message: 'Settings updated successfully' });
     }
 
@@ -52,6 +65,7 @@ export const updateSettings = async (req: Request, res: Response) => {
       ...updateData,
       updatedAt: new Date()
     };
+    saveStoreToDisk();
     return res.json({ success: true, data: memoryStore.settings, message: 'Settings updated successfully' });
   } catch (error: any) {
     return res.status(400).json({ success: false, message: error.message });

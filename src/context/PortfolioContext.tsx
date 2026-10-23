@@ -296,7 +296,12 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
       if (st?.data?.data) {
         setSettings((prev) => {
-          const merged = { ...prev, ...st.data.data };
+          const incoming = st.data.data;
+          const serverImg = incoming.profileImage;
+          const profileImage = (serverImg && serverImg.trim().length > 0)
+            ? serverImg
+            : (prev?.profileImage || '');
+          const merged = { ...prev, ...incoming, profileImage };
           try {
             localStorage.setItem('elieza_portfolio_settings', JSON.stringify(merged));
           } catch (e) {}
